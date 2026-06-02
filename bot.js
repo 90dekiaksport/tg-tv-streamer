@@ -1,22 +1,21 @@
 import TelegramBot from "node-telegram-bot-api";
 
 const token = process.env.TG_TOKEN;
-const webAppUrl = process.env.WEBAPP_URL || "https://your-public-domain.com";
 
-if (!token) {
-  console.error("Error: Set TG_TOKEN in environment before running the bot.");
-  process.exit(1);
-}
+// 2. Your live GitHub Pages website link:
+const webAppUrl = "https://90dekiaksport.github.io/tg-tv-streamer/"; 
 
+// Initialize the Telegram Bot with live polling active
 const bot = new TelegramBot(token, { polling: true });
 
+// Listen for the /start command
 bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, "Open the TV player:", {
+  bot.sendMessage(msg.chat.id, "Welcome! Click the button below to open the live TV player:", {
     reply_markup: {
       inline_keyboard: [
         [
           {
-            text: "Open TV App",
+            text: "📺 Open TV App",
             web_app: { url: webAppUrl }
           }
         ]
@@ -25,10 +24,12 @@ bot.onText(/\/start/, (msg) => {
   });
 });
 
+// Fallback listener if they type text instead of using the app button
 bot.on("message", (msg) => {
-  if (msg.text && msg.text.toLowerCase().includes("channel")) {
-    bot.sendMessage(msg.chat.id, "Use /start to open the TV player.");
+  if (msg.text && !msg.text.startsWith("/")) {
+    bot.sendMessage(msg.chat.id, "Please use the /start command to launch the TV player layout.");
   }
 });
 
-console.log("Telegram bot started");
+// Confirmation message so you see it in VS Code terminal
+console.log("🚀 Success! Your Telegram bot is online and listening for commands...");
