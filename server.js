@@ -1,3 +1,4 @@
+/* c:\Users\msi\telegram-tv\server.js */
 import express from "express";
 import path from "path";
 import fs from "fs";
@@ -38,11 +39,12 @@ app.get("/api/chat/:channelId", (req, res) => {
 
 app.post("/api/chat/:channelId", (req, res) => {
   const { username, text } = req.body;
-  if (!text) return res.status(400).send("Missing text");
+  if (!text) return res.status(400).send("Message text is required");
 
   const newMessage = {
     channelId: req.params.channelId,
-    username: username || "Guest",
+    // Sanitize username for display
+    username: username ? username.substring(0, 20) : "Guest",
     text,
     timestamp: Date.now()
   };
