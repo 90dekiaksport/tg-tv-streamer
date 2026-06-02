@@ -1,17 +1,28 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Serve the 'player' folder as static files
-// This makes index.html and streams.json accessible
+app.set("view engine", "ejs");
+app.set("views", path.join(process.cwd(), "views"));
+
 app.use("/player", express.static(path.join(process.cwd(), "player")));
 app.use(express.static(path.join(process.cwd(), "public")));
 
-// Route the root URL to serve the premium player UI
+// 🗂️ Dashboard Route
 app.get("/", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "player", "index.html"));
+  const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8"));
+  res.render("index", { channels: streams });
+});
+
+// 📺 Dedicated Channel Detail Route
+app.get("/channel/:id", (req, res) => {
+  const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8"));
+  const channel = streams.find(c => c.id === req.params.id);
+  if (!channel) return res.redirect("/");
+  res.render("player", { channel });
 });
 
 app.listen(port, () => {

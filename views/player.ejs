@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title><%= channel.title %> - Live Player</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.10/dist/hls.min.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0b0c10; color: white; }
+    .glass-card { background: rgba(22, 24, 32, 0.8); backdrop-filter: blur(10px); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    #chat-box { height: 280px; overflow-y: auto; scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center pb-10">
+
+  <!-- 🎨 Top Bar -->
+  <header class="w-full max-w-md px-5 py-6 flex items-center gap-4">
+    <a href="/" class="p-2 -ml-2 text-gray-400 hover:text-white">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    </a>
+    <h1 class="text-sm font-bold tracking-tight truncate text-blue-500 uppercase"><%= channel.title %></h1>
+  </header>
+
+  <main class="w-full max-w-md px-4">
+    <!-- 📺 Smart Player -->
+    <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/5 shadow-2xl">
+      <div id="loader" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0b0c10]">
+        <div class="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+        <span class="mt-4 text-[10px] font-bold uppercase tracking-widest text-blue-500/60">Buffering</span>
+      </div>
+
+      <video id="video-player" class="w-full h-full object-contain hidden" controls playsinline></video>
+      <iframe id="iframe-player" class="w-full h-full hidden" sandbox="allow-scripts allow-same-origin allow-presentation" allowfullscreen frameborder="0"></iframe>
+    </div>
+
+    <!-- 📊 Metadata -->
+    <div class="mt-6">
+      <h2 class="text-xl font-bold"><%= channel.title %></h2>
+      <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p>
+    </div>
+
+    <!-- 💬 Live Chat Feed -->
+    <section class="mt-8 glass-card rounded-2xl border border-white/5 overflow-hidden">
+      <div class="px-4 py-3 border-b border-white/5 flex justify-between items-center">
+        <span class="text-[10px] font-black tracking-widest text-gray-500 uppercase">Live Chat</span>
+        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+      </div>
+      
+      <div id="chat-box" class="p-4 flex flex-col gap-3 no-scrollbar">
+        <!-- Mock Messages -->
+        <div class="flex flex-col"><span class="text-[10px] text-blue-500 font-black">Abebe</span><p class="text-xs text-gray-300">Great signal today! 🇪🇹</p></div>
+        <div class="flex flex-col"><span class="text-[10px] text-blue-500 font-black">Selam</span><p class="text-xs text-gray-300">Listening from Addis!</p></div>
+        <div class="flex flex-col"><span class="text-[10px] text-blue-500 font-black">System</span><p class="text-xs text-gray-500 italic">User joined the stream...</p></div>
+      </div>
+
+      <div class="p-3 bg-black/40 flex gap-2">
+        <input id="chat-input" type="text" placeholder="Type a message..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500/50">
+        <button onclick="sendMsg()" class="bg-blue-600 px-4 py-2 rounded-lg text-xs font-bold">Send</button>
+      </div>
+    </section>
+
+    <!-- 🚀 Telegram Link -->
+    <div class="mt-6 text-center">
+      <a href="https://t.me/+I4XcTqHq-zBlZjZk" target="_blank" class="inline-block py-3 px-8 rounded-xl bg-blue-600 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 active:scale-95 transition-transform">
+        Join our Telegram
+      </a>
+    </div>
+  </main>
+
+  <script>
+    const telegram = window.Telegram.WebApp;
+    telegram.ready();
+    telegram.expand();
+
+    const video = document.getElementById('video-player');
+    const iframe = document.getElementById('iframe-player');
+    const loader = document.getElementById('loader');
+    const chatBox = document.getElementById('chat-box');
+    
+    let hls = null;
+    const channelSrc = "<%= channel.src %>";
+
+    /**
+     * 🛡️ AGGRESSIVE AD & REDIRECT BLOCKING
+     */
+    window.open = function() { return null; };
+    window.onbeforeunload = function() { return "External navigation blocked."; };
+
+    window.addEventListener('blur', () => {
+      if (document.activeElement === iframe) {
+        setTimeout(() => window.focus(), 100);
+      }
+    });
+
+    /**
+     * 📺 Smart Player Logic
+     */
+    function initializePlayer() {
+      const isHls = channelSrc.toLowerCase().includes('.m3u8') || channelSrc.includes('playlist');
+
+      if (isHls) {
+        iframe.classList.add('hidden');
+        video.classList.remove('hidden');
+        
+        if (Hls.isSupported()) {
+          hls = new Hls({ capLevelToPlayerSize: true });
+          hls.loadSource(channelSrc);
+          hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = channelSrc;
+        }
+      } else {
+        video.classList.add('hidden');
+        iframe.classList.remove('hidden');
+        iframe.src = channelSrc;
+      }
+    }
+
+    video.addEventListener('playing', () => loader.classList.add('hidden'));
+    video.addEventListener('waiting', () => loader.classList.remove('hidden'));
+    iframe.onload = () => loader.classList.add('hidden');
+
+    /**
+     * 💬 Mock Chat Logic
+     */
+    function sendMsg() {
+      const input = document.getElementById('chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      const div = document.createElement('div');
+      div.className = "flex flex-col animate-fade-in";
+      div.innerHTML = `<span class="text-[10px] text-blue-500 font-black">You</span><p class="text-xs text-gray-300">${msg}</p>`;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      input.value = "";
+
+      // Simulate a response
+      setTimeout(() => {
+        const resp = document.createElement('div');
+        resp.className = "flex flex-col";
+        resp.innerHTML = `<span class="text-[10px] text-blue-500 font-black">Listener</span><p class="text-xs text-gray-300">Listening! 📻</p>`;
+        chatBox.appendChild(resp);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 2000);
+    }
+
+    initializePlayer();
+  </script>
+</body>
+</html>
