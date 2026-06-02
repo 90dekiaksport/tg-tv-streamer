@@ -15,6 +15,20 @@
     #chat-box { height: 280px; overflow-y: auto; scroll-behavior: smooth; }
     #chat-history { height: 260px; overflow-y: auto; scroll-behavior: smooth; }
     .animate-fade-in { animation: fadeIn 0.5s ease-out; }
+    
+    /* Fullscreen Fallback CSS */
+    .player-wrapper.fullscreen-fallback {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: 100vw !important;
+      max-height: 100vh !important;
+      z-index: 9999;
+      border-radius: 0 !important;
+      aspect-ratio: auto !important;
+    }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
@@ -33,14 +47,14 @@
 
   <main class="w-full max-w-md px-4">
     <!-- 📺 Smart Player -->
-    <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/5 shadow-2xl">
+    <div id="player-wrapper" class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/5 shadow-2xl">
       <div id="loader" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0b0c10]">
         <div class="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
         <span class="mt-4 text-[10px] font-bold uppercase tracking-widest text-blue-500/60">Buffering</span>
       </div>
 
       <video id="video-player" class="w-full h-full object-contain hidden" controls playsinline></video>
-      <iframe id="iframe-player" class="w-full h-full hidden" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-fullscreen" allowfullscreen frameborder="0"></iframe>
+      <iframe id="iframe-player" class="w-full h-full hidden" allow="fullscreen; autoplay" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-fullscreen" frameborder="0"></iframe>
 
       <!-- Custom Fullscreen Button -->
       <button id="fullscreen-btn" class="absolute bottom-4 right-4 z-40 bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
@@ -99,6 +113,7 @@
     const chatHistory = document.getElementById('chat-history');
     const chatInput = document.getElementById('chat-input');
     const viewFullscreenBtn = document.getElementById('view-fullscreen-btn');
+    const playerWrapper = document.getElementById('player-wrapper'); // Get the player container
     const channelId = "<%= channel.id %>";
 
     /**
@@ -209,18 +224,27 @@
     };
 
     // Fullscreen button handlers
-    function toggleFullscreen() {
-      // Detect which player is currently visible/active
-      const activePlayer = (video && video.style.display !== 'none') ? video : iframe;
+    function toggleFullscreen() { // Renamed from toggleFullScreen to toggleFullscreen for consistency
+      const activePlayerElement = (video && video.style.display !== 'none') ? video : iframe;
       
-      if (!activePlayer) return;
+      if (!activePlayerElement) return;
 
-      if (activePlayer.requestFullscreen) {
-        activePlayer.requestFullscreen();
-      } else if (activePlayer.webkitRequestFullscreen) { /* iOS / Safari / Telegram Webview */
-        activePlayer.webkitRequestFullscreen();
-      } else if (activePlayer.msRequestFullscreen) { /* IE / Edge */
-        activePlayer.msRequestFullscreen();
+      // Try native fullscreen first
+      if (activePlayerElement.requestFullscreen) {
+        activePlayerElement.requestFullscreen();
+      } else if (activePlayerElement.webkitRequestFullscreen) { /* iOS / Safari / Telegram Webview */
+        activePlayerElement.webkitRequestFullscreen();
+      } else if (activePlayerElement.msRequestFullscreen) { /* IE / Edge */
+        activePlayerElement.msRequestFullscreen();
+      } else {
+        // Fallback: Toggle CSS class on the player container for "fake" fullscreen
+        playerWrapper.classList.toggle('fullscreen-fallback');
+        // Adjust button visibility if needed for the fallback
+        if (playerWrapper.classList.contains('fullscreen-fallback')) {
+          fullscreenBtn.classList.add('hidden'); // Hide the small button when in fake fullscreen
+        } else {
+          fullscreenBtn.classList.remove('hidden'); // Show it again
+        }
       }
     }
 
