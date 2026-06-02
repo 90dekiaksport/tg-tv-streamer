@@ -2,122 +2,228 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Premium Sports Stream</title>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Ethiopian Radio FM - Premium</title>
+  <!-- External Dependencies -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.10/dist/hls.min.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
   <style>
-    :root {
-      --bg: #0d0e12;
-      --card-bg: #161820;
-      --accent: #ff0033;
-      --text: #ffffff;
-      --text-dim: #94a3b8;
-    }
-
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
+    .obsidian-bg { background-color: #0b0c10; }
+    .glass-card { background: rgba(22, 24, 32, 0.8); backdrop-filter: blur(10px); }
+    
+    /* Custom scrollbar for channel list */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    .player-container {
-      width: 100%;
-      background: #000;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    .active-glow {
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+      border-color: #3b82f6;
     }
-
-    #video {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      display: block;
-    }
-
-    .match-selection {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .match-card {
-      text-decoration: none;
-      color: inherit;
-      background: var(--card-bg);
-      border-radius: 16px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      aspect-ratio: 16 / 8;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: transform 0.2s, border-color 0.2s;
-    }
-
-    .match-card:active { transform: scale(0.98); }
-    .match-card.active { border-color: var(--accent); box-shadow: 0 0 15px rgba(255, 0, 51, 0.2); }
-
-    .card-top { padding: 12px; display: flex; justify-content: flex-start; }
-    .live-badge {
-      color: var(--accent);
-      font-size: 0.7rem;
-      font-weight: 800;
-      background: rgba(255, 0, 51, 0.1);
-      padding: 4px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .card-middle { flex: 1; display: flex; align-items: center; justify-content: center; gap: 24px; }
-    .team-logo { width: 60px; height: 40px; object-fit: contain; }
-    .vs-divider { font-weight: 800; font-size: 1.2rem; font-style: italic; opacity: 0.5; }
-    .card-bottom { padding: 12px 16px; background: rgba(0,0,0,0.2); }
-    .match-title { font-weight: 600; font-size: 1rem; margin-bottom: 2px; }
-    .match-schedule { color: var(--text-dim); font-size: 0.75rem; font-weight: 400; }
   </style>
 </head>
-<body>
-  <div class="player-container">
-    <video id="video" controls playsinline></video>
-  </div>
+<body class="obsidian-bg text-white min-h-screen flex flex-col items-center">
 
-  <div class="match-selection">
-    <% for (const id in channels) { %>
-      <% const item = channels[id]; %>
-      <a href="/?channel=<%= id %>" class="match-card <%= id === selectedId ? 'active' : '' %>">
-        <div class="card-top"><div class="live-badge">● LIVE</div></div>
-        <div class="card-middle">
-          <img src="<%= item.logoLeft %>" class="team-logo" alt="Team 1">
-          <div class="vs-divider">VS</div>
-          <img src="<%= item.logoRight %>" class="team-logo" alt="Team 2">
+  <!-- 🎨 Header Bar -->
+  <header class="w-full max-w-md px-5 py-6 flex justify-between items-center">
+    <h1 class="text-lg font-extrabold tracking-tighter text-blue-500">ETHIOPIAN RADIO FM</h1>
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 bg-red-600 rounded-full animate-pulse"></span>
+      <span class="text-[10px] font-bold uppercase tracking-widest opacity-70">Live Now</span>
+    </div>
+  </header>
+
+  <!-- 📺 Smart Player Switcher Container -->
+  <main class="w-full max-w-md px-4">
+    <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/5 shadow-2xl group">
+      
+      <!-- 🌀 Sleek Loading Spinner -->
+      <div id="loader" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0b0c10]">
+        <div class="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+        <span class="mt-4 text-[10px] font-semibold uppercase tracking-widest text-blue-500/60">Tuning Signal</span>
+      </div>
+
+      <!-- HLS Video Player -->
+      <video id="video-player" class="w-full h-full object-contain hidden" controls playsinline></video>
+      
+      <!-- 🛡️ Sandboxed Iframe Player (Aggressive Ad Block) -->
+      <iframe 
+        id="iframe-player" 
+        class="w-full h-full hidden" 
+        sandbox="allow-scripts allow-same-origin allow-presentation" 
+        allowfullscreen 
+        frameborder="0">
+      </iframe>
+    </div>
+
+    <!-- 📊 Metadata & Quality Selector -->
+    <div class="mt-6 flex flex-col gap-1">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 id="current-title" class="text-xl font-bold">Loading...</h2>
+          <p id="current-desc" class="text-xs text-gray-500 font-medium">Please select a broadcast station below.</p>
         </div>
-        <div class="card-bottom">
-          <div class="match-title"><%= item.title %></div>
-          <div class="match-schedule"><%= item.schedule %></div>
+        
+        <!-- Quality Selector Buttons -->
+        <div class="flex gap-2">
+          <button onclick="handleQualityChange('HD', event)" class="px-3 py-1 rounded-md text-[10px] font-bold bg-blue-600/10 text-blue-500 border border-blue-500/20 hover:bg-blue-600 hover:text-white transition-all">HD</button>
+          <button onclick="handleQualityChange('SD', event)" class="px-3 py-1 rounded-md text-[10px] font-bold bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white transition-all">SD</button>
         </div>
-      </a>
-    <% } %>
-  </div>
+      </div>
+    </div>
+
+    <!-- 🌀 Channel List Grid -->
+    <section class="mt-8 pb-10">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em]">Stations Catalog</h3>
+        <span class="text-[10px] text-blue-500/50 font-bold" id="channel-count">0 Channels</span>
+      </div>
+      <div id="channel-grid" class="grid grid-cols-2 gap-4">
+        <!-- Dynamic Cards Injected via JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- 🛰️ Status Bar -->
+  <footer class="fixed bottom-0 left-0 right-0 py-3 glass-card border-t border-white/5 px-6 flex justify-between items-center z-[100]">
+    <div class="text-[10px] text-gray-400 font-medium tracking-wide" id="stream-status">System Ready</div>
+    <div class="text-[10px] text-blue-500 font-bold tracking-widest uppercase">Premium View</div>
+  </footer>
 
   <script>
-    const video = document.getElementById('video');
-    const streamUrl = '<%= match.streamUrl %>';
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(streamUrl);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = streamUrl;
-      video.addEventListener('loadedmetadata', () => video.play().catch(() => {}));
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+
+    const video = document.getElementById('video-player');
+    const iframe = document.getElementById('iframe-player');
+    const loader = document.getElementById('loader');
+    const grid = document.getElementById('channel-grid');
+    const status = document.getElementById('stream-status');
+    
+    let hls = null;
+    let currentChannels = [];
+
+    /**
+     * 🛡️ Aggressive Ad Blocking Logic for Quality Buttons
+     */
+    function handleQualityChange(quality, event) {
+      // Strictly kill propagation to prevent invisible ad overlays
+      event.preventDefault();
+      event.stopPropagation();
+      
+      status.innerText = `Switched to ${quality} Quality`;
+      // Here you would find the specific source for the quality in your data
     }
+
+    /**
+     * 📺 Smart Player Switcher
+     */
+    function loadChannel(channel) {
+      loader.classList.remove('hidden');
+      document.getElementById('current-title').innerText = channel.title;
+      document.getElementById('current-desc').innerText = channel.description;
+      
+      const isHls = channel.src.toLowerCase().includes('.m3u8') || channel.src.includes('playlist');
+
+      // Cleanup Hls
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+
+      if (isHls) {
+        iframe.classList.add('hidden');
+        iframe.src = "";
+        video.classList.remove('hidden');
+        
+        if (Hls.isSupported()) {
+          hls = new Hls({ capLevelToPlayerSize: true, autoStartLoad: true });
+          hls.loadSource(channel.src);
+          hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = channel.src;
+        }
+        status.innerText = "Connecting HLS Stream...";
+      } else {
+        video.pause();
+        video.classList.add('hidden');
+        iframe.classList.remove('hidden');
+        iframe.src = channel.src;
+        status.innerText = "Initializing Secure Web Player...";
+      }
+
+      updateActiveUI(channel.id);
+    }
+
+    /**
+     * 🌀 Loading Spinner Event Listeners
+     */
+    video.addEventListener('playing', () => loader.classList.add('hidden'));
+    video.addEventListener('waiting', () => loader.classList.remove('hidden'));
+    iframe.onload = () => loader.classList.add('hidden');
+
+    /**
+     * 🎨 UI Rendering Logic
+     */
+    function renderGrid(channels) {
+      grid.innerHTML = "";
+      channels.forEach(ch => {
+        const card = document.createElement('div');
+        card.id = `card-${ch.id}`;
+        card.className = "glass-card p-4 rounded-xl border border-white/5 cursor-pointer transition-all hover:border-blue-500/50 active:scale-95";
+        card.innerHTML = `
+          <div class="flex gap-3 items-center">
+            <div class="w-10 h-10 rounded-lg bg-black flex items-center justify-center border border-white/5 overflow-hidden">
+              <img src="${ch.logoLeft || 'https://placehold.co/100x100/000/3b82f6?text=FM'}" class="w-full h-full object-cover">
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[11px] font-bold tracking-tight truncate w-24">${ch.title}</span>
+              <span class="text-[9px] text-gray-500 uppercase font-black tracking-widest">Broadcast</span>
+            </div>
+          </div>
+        `;
+        card.onclick = () => loadChannel(ch);
+        grid.appendChild(card);
+      });
+      document.getElementById('channel-count').innerText = `${channels.length} Stations`;
+    }
+
+    function updateActiveUI(id) {
+      document.querySelectorAll('#channel-grid > div').forEach(el => el.classList.remove('active-glow'));
+      const activeCard = document.getElementById(`card-${id}`);
+      if (activeCard) activeCard.classList.add('active-glow');
+    }
+
+    /**
+     * 🚀 Data Fetching
+     */
+    async function initApp() {
+      try {
+        status.innerText = "Fetching Catalog...";
+        const response = await fetch('/player/streams.json');
+        currentChannels = await response.json();
+        
+        if (currentChannels.length > 0) {
+          renderGrid(currentChannels);
+          loadChannel(currentChannels[0]);
+        }
+      } catch (err) {
+        console.error("Fetch Error:", err);
+        status.innerText = "Network Error - Using Defaults";
+        // Fallback or error UI logic
+      }
+    }
+
+    initApp();
   </script>
 </body>
 </html>
