@@ -297,6 +297,14 @@
     const video = document.getElementById("video");
     let hls;
 
+    // Robust UI Fix: Hide loading overlay whenever video actually starts playing or fails
+    video.addEventListener('playing', () => loadingOverlay.classList.remove("active"));
+    video.addEventListener('pause', () => loadingOverlay.classList.remove("active"));
+    video.addEventListener('error', () => {
+      loadingOverlay.classList.remove("active");
+      updateStatus("Error: Stream unavailable");
+    });
+
     function updateStatus(text) {
       statusEl.textContent = text;
     }
@@ -322,6 +330,7 @@
         hls.loadSource(src);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          loadingOverlay.classList.remove("active");
           video.play().catch(() => {
             updateStatus("Tap play to continue");
           });
@@ -329,12 +338,14 @@
         });
         hls.on(Hls.Events.ERROR, (_event, data) => {
           if (data.fatal) {
+            loadingOverlay.classList.remove("active");
             updateStatus(`Stream error: ${data.type}`);
           }
         });
       } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
         video.src = src;
         video.addEventListener("loadedmetadata", () => {
+          loadingOverlay.classList.remove("active");
           video.play().catch(() => {
             updateStatus("Tap play to continue");
           });
