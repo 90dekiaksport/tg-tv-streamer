@@ -1,241 +1,262 @@
-<!-- c:\Users\msi\telegram-tv\views\player.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title><%= channel.title %> - Live Player</title>
+  <title><%= channel.title %> - 90 ደቂቃ Live</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.10/dist/hls.min.js"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #0b0c10; color: white; }
+    body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; background-color: #0b0c10; }
     .glass-card { background: rgba(22, 24, 32, 0.8); backdrop-filter: blur(10px); }
+    .player-aspect { aspect-ratio: 16 / 9; }
+    .control-gradient { background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%); }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: #ffffff; cursor: pointer; border: 2px solid #3b82f6; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
-    #chat-history { height: 320px; overflow-y: auto; scroll-behavior: smooth; }
-    .animate-fade-in { animation: fadeIn 0.5s ease-out; }
-    
-    /* 📺 CSS-Based Fullscreen Logic */
-    .custom-fullscreen-active {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      z-index: 999999 !important;
-      background: #000 !important;
-      border-radius: 0 !important;
-    }
-    .custom-fullscreen-active iframe, .custom-fullscreen-active video {
-      width: 100% !important;
-      height: 100% !important;
-    }
-    .fullscreen-exit-mode {
-      position: fixed !important;
-      bottom: 24px !important;
-      right: 16px !important;
-      z-index: 1000000 !important;
-      width: auto !important;
-      background-color: #dc2626 !important;
-    }
-    .hide-layout {
-      display: none !important;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col items-center pb-10">
-
-  <!-- 🎨 Top Bar -->
-  <header class="w-full max-w-md px-5 py-6 flex items-center gap-4 app-header">
-    <a href="/" class="p-2 -ml-2 text-gray-400 hover:text-white">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-    </a>
-    <h1 class="text-sm font-bold tracking-tight truncate text-blue-500 uppercase"><%= channel.title %></h1>
+<body class="text-white min-h-screen flex flex-col items-center">
+  
+  <!-- Header -->
+  <header class="w-full px-5 py-4 flex justify-between items-center z-50">
+    <a href="/" class="p-2 -ml-2 text-gray-400">✕</a>
+    <div class="flex flex-col items-center">
+        <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Live Match</span>
+        <h1 class="text-xs font-bold truncate max-w-[150px]"><%= channel.title %></h1>
+    </div>
+    <div class="w-8"></div>
   </header>
 
-  <main class="w-full max-w-md px-4">
-    <!-- 📺 Smart Player (Taller aspect ratio for more space) -->
-    <div id="player-wrapper" class="relative bg-black rounded-2xl border border-gray-800 overflow-hidden shadow-2xl mb-6 aspect-[14/9] flex flex-col">
-      <div id="loader" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0b0c10]">
-        <div class="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
-        <span class="mt-4 text-[10px] font-bold uppercase tracking-widest text-blue-500/60">Buffering</span>
-      </div>
-
-      <video id="video-player" class="w-full flex-1 object-contain hidden" controls playsinline></video>
-      <iframe id="iframe-player" class="w-full flex-1 hidden" allow="fullscreen; autoplay" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-fullscreen" frameborder="0"></iframe>
-
-      <!-- 🚀 View Full Screen Button -->
-      <button id="fullscreen-btn" onclick="toggleInAppFullScreen()" class="w-full py-3 bg-gray-800 text-white font-bold hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm shadow-lg border-t border-gray-700">
-        <span id="btn-text">📺 VIEW FULL SCREEN</span>
-      </button>
-
-      <!-- Icon toggle for fallback -->
-      <button id="icon-fullscreen-btn" onclick="toggleInAppFullScreen()" class="absolute bottom-12 right-4 z-[100000] bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3m-18 0v3a2 2 0 0 0 2 2h3"></path></svg>
-      </button>
+  <main class="w-full max-w-4xl px-4 flex-1">
+    <!-- 🎛️ Server Switcher -->
+    <div class="flex items-center gap-3 mb-4 overflow-x-auto no-scrollbar py-2">
+        <span class="text-[9px] font-bold text-gray-500 uppercase">Servers:</span>
+        <% channel.servers.forEach((srv, index) => { %>
+            <button onclick="switchServer(<%= index %>)" 
+                    id="btn-srv-<%= index %>"
+                    class="srv-btn w-8 h-8 rounded-full border border-white/10 text-[11px] font-black transition-all duration-300 flex items-center justify-center
+                           <%= index === 0 ? 'border-blue-500 bg-blue-500/20 text-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.4)]' : 'bg-white/5 text-gray-400' %>">
+                <%= index + 1 %>
+            </button>
+        <% }) %>
     </div>
 
-    <!-- 📊 Metadata -->
-    <div class="mt-6 metadata-section">
-      <h2 class="text-xl font-bold"><%= channel.title %></h2>
-      <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p>
+    <!-- 📺 Player Container -->
+    <div id="player-wrapper" class="relative player-aspect w-full bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/5 group">
+        <div id="loading-spinner" class="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div class="w-8 h-8 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+        </div>
+
+        <!-- Video Elements -->
+        <video id="video-player" class="w-full h-full object-contain" playsinline></video>
+        <iframe id="iframe-player" class="hidden w-full h-full border-none" 
+                sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"></iframe>
+
+        <!-- 📺 Custom Control Overlay -->
+        <div id="controls-overlay" class="absolute inset-0 z-40 control-gradient flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-active:opacity-100">
+            <!-- Top Row -->
+            <div class="p-4 flex justify-end">
+                <span id="quality-badge" class="px-2 py-0.5 rounded bg-blue-500 text-[8px] font-black uppercase">HD</span>
+            </div>
+
+            <!-- Center Controls -->
+            <div class="flex-1 flex items-center justify-center gap-8 pointer-events-auto">
+                <button onclick="rewind()" class="text-white/80 hover:text-white transition-colors">⏪</button>
+                <button id="play-pause-btn" onclick="togglePlay()" class="w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-2xl backdrop-blur-md hover:scale-110 transition-transform">▶️</button>
+                <button onclick="fastForward()" class="text-white/80 hover:text-white transition-colors">⏩</button>
+            </div>
+
+            <!-- Bottom Controls -->
+            <div class="p-6 pointer-events-auto">
+                <div class="flex items-center justify-between mb-2">
+                    <span id="timestamp" class="text-[10px] font-mono text-gray-400">00:00 / 00:00</span>
+                    <div class="flex gap-4">
+                        <button class="text-xs grayscale opacity-50">⚙️</button>
+                        <button onclick="toggleFullScreen()" class="text-xs">🔲</button>
+                    </div>
+                </div>
+                <input type="range" id="progress-bar" value="0" min="0" max="100" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            </div>
+        </div>
     </div>
 
-    <!-- 💬 Interactive Live Chat Component -->
-    <section class="mt-8 glass-card rounded-2xl border border-white/5 overflow-hidden chat-container">
-      <div class="px-4 py-3 border-b border-white/5 flex justify-between items-center">
-        <span class="text-[10px] font-black tracking-widest text-gray-500 uppercase">Live Chat</span>
-        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-      </div>
-      
-      <div id="chat-history" class="p-4 flex flex-col no-scrollbar overflow-y-auto"></div>
-
-      <div class="p-3 bg-black/40 border-t border-white/5 flex gap-2">
-        <input id="chat-input" type="text" placeholder="Type a message..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500/50">
-        <button onclick="sendMsg()" class="bg-blue-600 px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest">Send</button>
-      </div>
+    <!-- 💬 Live Chat Module -->
+    <section class="mt-8 mb-20">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Match Chat</h3>
+            <span class="flex items-center gap-1.5 text-[9px] text-green-500 font-bold uppercase">
+                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Live
+            </span>
+        </div>
+        <div id="chat-container" class="glass-card rounded-2xl border border-white/5 h-64 flex flex-col">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar text-[13px]">
+                <!-- Messages load here -->
+            </div>
+            <div class="p-3 border-t border-white/5 flex gap-2">
+                <input id="chat-input" type="text" placeholder="Type a message..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-blue-500/50">
+                <button onclick="sendMessage()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors">Send</button>
+            </div>
+        </div>
     </section>
-
-    <!-- 🚀 Telegram Link -->
-    <div class="mt-8 mb-10 text-center tg-link-section">
-      <a href="https://t.me/+I4XcTqHq-zBlZjZk" target="_blank" class="inline-block py-3 px-8 rounded-xl bg-blue-600 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 active:scale-95 transition-transform">
-        Join our Telegram
-      </a>
-    </div>
   </main>
 
-  <script>
-    const telegram = window.Telegram.WebApp;
-    telegram.ready();
-    telegram.expand();
+  <footer class="fixed bottom-6 left-0 right-0 px-6 z-50">
+    <a href="https://t.me/+I4XcTqHq-zBlZjZk" target="_blank" class="glass-card flex items-center justify-between p-4 rounded-2xl border border-blue-500/20 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.36-.48.99-.74 3.84-1.67 6.39-2.77 7.64-3.3 3.64-1.53 4.4-1.8 4.89-1.81.11 0 .35.03.5.15.13.11.17.26.18.37 0 .03.01.12 0 .2z"/></svg>
+            </div>
+            <div>
+                <p class="text-[11px] font-bold">Join our Telegram</p>
+                <p class="text-[9px] text-gray-500">Get instant match notifications</p>
+            </div>
+        </div>
+        <span class="text-blue-500">→</span>
+    </a>
+  </footer>
 
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+
+    const channelId = "<%= channel.id %>";
+    const servers = <%- JSON.stringify(channel.servers) %>;
     const video = document.getElementById('video-player');
     const iframe = document.getElementById('iframe-player');
-    const loader = document.getElementById('loader');
-    const chatHistory = document.getElementById('chat-history');
-    const chatInput = document.getElementById('chat-input');
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
-    const channelId = "<%= channel.id %>";
-    const userName = telegram.initDataUnsafe.user?.first_name || "Guest";
-
-    let lastMessageCount = 0;
-
-    async function fetchMessages() {
-      try {
-        const res = await fetch(`/api/chat/${channelId}`);
-        const messages = await res.json();
-        
-        if (messages.length !== lastMessageCount) {
-          chatHistory.innerHTML = "";
-          messages.forEach(m => appendMessage(m.username, m.text, m.username === userName));
-          lastMessageCount = messages.length;
-          chatHistory.scrollTop = chatHistory.scrollHeight;
-        }
-      } catch (err) { console.error("Sync error:", err); }
-    }
-
-    async function sendMsg() {
-      const text = chatInput.value.trim();
-      if (!text) return;
-      
-      try {
-        await fetch(`/api/chat/${channelId}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: userName, text })
-        });
-        chatInput.value = "";
-        fetchMessages();
-      } catch (err) { alert("Message failed to send."); }
-    }
-
-    function appendMessage(name, text, isUser = false) {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `flex flex-col ${isUser ? 'items-end' : 'items-start'} mb-4 animate-fade-in`;
-      const bubbleClass = isUser ? 'bg-blue-600 text-white rounded-l-xl rounded-tr-xl' : 'bg-white/10 text-gray-200 rounded-r-xl rounded-tl-xl';
-      
-      msgDiv.innerHTML = `
-        <span class="text-[9px] font-bold ${isUser ? 'text-blue-400' : 'text-gray-500'} mb-1 px-1">${name}</span>
-        <div class="px-3 py-2 text-xs ${bubbleClass} max-w-[85%] break-words shadow-sm">
-          ${text}
-        </div>
-      `;
-      chatHistory.appendChild(msgDiv);
-    }
-
+    const loader = document.getElementById('loading-spinner');
     let hls = null;
-    const channelSrc = "<%= channel.src %>";
 
-    /**
-     * 🛡️ AGGRESSIVE AD & REDIRECT BLOCKING
-     */
-    window.open = function() { return null; };
-    window.onbeforeunload = function() { return "External navigation blocked."; };
-
-    window.addEventListener('blur', () => {
-      if (document.activeElement === iframe) {
-        setTimeout(() => window.focus(), 100);
-      }
-    });
-
-    /**
-     * 📺 Smart Player Logic
-     */
-    function initializePlayer() {
-      const isHls = channelSrc.toLowerCase().includes('.m3u8') || channelSrc.includes('playlist');
-
-      if (isHls) {
-        iframe.classList.add('hidden');
-        video.classList.remove('hidden');
-        
-        if (Hls.isSupported()) {
-          hls = new Hls({ capLevelToPlayerSize: true });
-          hls.loadSource(channelSrc);
-          hls.attachMedia(video);
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = channelSrc;
-        }
-      } else {
-        video.classList.add('hidden');
-        iframe.classList.remove('hidden');
-        iframe.src = channelSrc;
-      }
-    }
-
-    // 🌀 Loading Spinner Logic - Targeted to the video/iframe activity
-    video.addEventListener('playing', () => loader.classList.add('hidden'));
-    video.addEventListener('waiting', () => loader.classList.remove('hidden'));
+    // 🛡️ Security: Redirect prevention
+    window.open = () => null;
     iframe.onload = () => loader.classList.add('hidden');
 
-    function toggleInAppFullScreen() {
-      const wrapper = document.getElementById('player-wrapper');
-      const btn = document.getElementById('fullscreen-btn');
-      const text = document.getElementById('btn-text');
-      
-      wrapper.classList.toggle('custom-fullscreen-active');
-      btn.classList.toggle('fullscreen-exit-mode');
-      
-      const elementsToHide = document.querySelectorAll('.app-header, .metadata-section, .chat-container, .tg-link-section');
-      elementsToHide.forEach(el => el.classList.toggle('hide-layout'));
+    function switchServer(index) {
+        const srv = servers[index];
+        
+        // Update UI buttons
+        document.querySelectorAll('.srv-btn').forEach((btn, i) => {
+            btn.classList.remove('border-blue-500', 'bg-blue-500/20', 'text-blue-500', 'shadow-[0_0_15px_rgba(59,130,246,0.4)]');
+            btn.classList.add('bg-white/5', 'text-gray-400');
+            if(i === index) {
+                btn.classList.add('border-blue-500', 'bg-blue-500/20', 'text-blue-500', 'shadow-[0_0_15px_rgba(59,130,246,0.4)]');
+                btn.classList.remove('bg-white/5', 'text-gray-400');
+            }
+        });
 
-      if (wrapper.classList.contains('custom-fullscreen-active')) {
-        text.innerText = "❌ EXIT FULL SCREEN";
-      } else {
-        text.innerText = "📺 VIEW FULL SCREEN";
-      }
+        loader.classList.remove('hidden');
+        
+        if (srv.type === 'm3u8') {
+            iframe.classList.add('hidden');
+            video.classList.remove('hidden');
+            iframe.src = "about:blank";
+            loadHls(srv.url);
+        } else {
+            if (hls) { hls.destroy(); hls = null; }
+            video.pause();
+            video.classList.add('hidden');
+            iframe.classList.remove('hidden');
+            iframe.src = srv.url;
+        }
     }
 
-    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMsg(); });
+    function loadHls(url) {
+        if (Hls.isSupported()) {
+            if (hls) hls.destroy();
+            hls = new Hls();
+            hls.loadSource(url);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                loader.classList.add('hidden');
+                video.play();
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = url;
+            video.addEventListener('loadedmetadata', () => {
+                loader.classList.add('hidden');
+                video.play();
+            });
+        }
+    }
 
+    // 🎛️ Custom Controls Logic
+    function togglePlay() {
+        const btn = document.getElementById('play-pause-btn');
+        if (video.paused) {
+            video.play();
+            btn.textContent = '⏸️';
+        } else {
+            video.pause();
+            btn.textContent = '▶️';
+        }
+    }
+
+    function rewind() { video.currentTime -= 10; }
+    function fastForward() { video.currentTime += 10; }
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.getElementById('player-wrapper').requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    // Timeline Updates
+    video.addEventListener('timeupdate', () => {
+        const progress = (video.currentTime / video.duration) * 100;
+        document.getElementById('progress-bar').value = progress || 0;
+        
+        const current = formatTime(video.currentTime);
+        const total = formatTime(video.duration || 0);
+        document.getElementById('timestamp').textContent = `${current} / ${total}`;
+    });
+
+    function formatTime(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = Math.floor(seconds % 60);
+        return `${h > 0 ? h + ':' : ''}${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    // 💬 Chat Polling Logic
+    async function fetchMessages() {
+        try {
+            const res = await fetch(`/api/chat/${channelId}`);
+            const messages = await res.json();
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = messages.map(msg => `
+                <div class="bg-white/5 p-3 rounded-2xl border border-white/5 animate-fade-in">
+                    <span class="text-blue-500 font-bold text-[10px] uppercase">${msg.username}</span>
+                    <p class="text-white/80 mt-1">${msg.text}</p>
+                </div>
+            `).join('');
+            container.scrollTop = container.scrollHeight;
+        } catch (e) { console.error("Chat sync failed", e); }
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        await fetch(`/api/chat/${channelId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                username: tg.initDataUnsafe?.user?.first_name || "Guest", 
+                text 
+            })
+        });
+        input.value = '';
+        fetchMessages();
+    }
+
+    // Init
+    switchServer(0);
     setInterval(fetchMessages, 2000);
     fetchMessages();
-    initializePlayer();
   </script>
 </body>
 </html>

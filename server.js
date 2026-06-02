@@ -18,15 +18,25 @@ app.use(express.static(path.join(process.cwd(), "public")));
 
 // 🗂️ Dashboard Route
 app.get("/", (req, res) => {
-  const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8"));
+  const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8")).map(ch => {
+    // Backward compatibility: Convert single src to servers array if necessary
+    if (!ch.servers || ch.servers.length === 0) {
+      ch.servers = [{ name: "Server 1", url: ch.src, type: ch.src.includes(".m3u8") ? "m3u8" : "iframe" }];
+    }
+    return ch;
+  });
   res.render("index", { channels: streams });
 });
 
 // 📺 Dedicated Channel Detail Route
 app.get("/channel/:id", (req, res) => {
   const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8"));
-  const channel = streams.find(c => c.id === req.params.id);
+  let channel = streams.find(c => c.id === req.params.id);
   if (!channel) return res.redirect("/");
+  
+  if (!channel.servers || channel.servers.length === 0) {
+    channel.servers = [{ name: "Server 1", url: channel.src, type: channel.src.includes(".m3u8") ? "m3u8" : "iframe" }];
+  }
   res.render("player", { channel });
 });
 

@@ -3,7 +3,12 @@
     "id": "mexico-southafrica",
     "title": "Mexico vs South Africa",
     "description": "JUNE 11 | 10:00 PM THURSDAY",
-    "src": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0",
+    "servers": [
+      { "name": "Server 1", "url": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0", "type": "iframe" },
+      { "name": "Server 2", "url": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8", "type": "m3u8" },
+      { "name": "Server 3", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "type": "m3u8" },
+      { "name": "Server 4", "url": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=1", "type": "iframe" }
+    ],
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/a/af/Flag_of_South_Africa.svg"
   },
@@ -11,7 +16,10 @@
     "id": "southkorea-czechia",
     "title": "South Korea vs Czech Republic",
     "description": "JUNE 12 | 05:00 AM FRIDAY",
-    "src": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0",
+    "servers": [
+      { "name": "Server 1", "url": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0", "type": "iframe" },
+      { "name": "Server 2", "url": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=1", "type": "iframe" }
+    ],
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_Czech_Republic.svg"
   },
@@ -19,7 +27,10 @@
     "id": "canada-BiH",
     "title": "Canada vs Bosnia and Herzegovina",
     "description": "JUNE 12 | 10:00 PM FRIDAY",
-    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "servers": [
+      { "name": "Main Stream", "url": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8", "type": "m3u8" },
+      { "name": "Backup", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "type": "m3u8" }
+    ],
     "logoLeft": "https://upload.wikimedia.org/wikipedia/en/c/cf/Flag_of_Canada.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Flag_of_Bosnia_and_Herzegovina.svg"
   },    
