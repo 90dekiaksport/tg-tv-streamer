@@ -61,7 +61,7 @@
 
   <main class="w-full max-w-md px-4">
     <!-- 📺 Smart Player -->
-    <div id="player-wrapper" class="bg-black rounded-2xl border border-gray-800 overflow-hidden shadow-2xl mb-6">
+    <div id="player-wrapper" class="relative bg-black rounded-2xl border border-gray-800 overflow-hidden shadow-2xl mb-6 aspect-video">
       <div id="loader" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0b0c10]">
         <div class="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
         <span class="mt-4 text-[10px] font-bold uppercase tracking-widest text-blue-500/60">Buffering</span>
@@ -71,18 +71,18 @@
       <iframe id="iframe-player" class="w-full h-full hidden" allow="fullscreen; autoplay" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-fullscreen" frameborder="0"></iframe>
 
       <!-- 🚀 Full Screen Button (Nested inside wrapper to prevent iframe interception) -->
-      <button id="fullscreen-btn" onclick="toggleAbsoluteView()" class="w-full mt-2 py-2 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm">
+      <button id="fullscreen-btn" onclick="toggleInAppFullScreen()" class="w-full mt-4 py-3 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm shadow-lg">
         <span id="btn-text">📺 VIEW FULL SCREEN</span>
       </button>
 
       <!-- Icon toggle for fallback -->
-      <button id="icon-fullscreen-btn" onclick="toggleAbsoluteView()" class="absolute bottom-12 right-4 z-[100000] bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
+      <button id="icon-fullscreen-btn" onclick="toggleInAppFullScreen()" class="absolute bottom-12 right-4 z-[100000] bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3m-18 0v3a2 2 0 0 0 2 2h3"></path></svg>
       </button>
     </div>
 
     <!-- 📊 Metadata -->
-    <div class="mt-6">
+    <div class="mt-6 metadata-section">
       <h2 class="text-xl font-bold"><%= channel.title %></h2>
       <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p>
     </div>
