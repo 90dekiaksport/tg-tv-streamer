@@ -58,7 +58,10 @@
         <div id="controls-overlay" class="absolute inset-0 z-40 flex flex-col opacity-0 transition-opacity duration-300 pointer-events-none group-active:opacity-100">
             <div class="flex-1"></div>
             <div class="p-6 flex justify-end pointer-events-auto relative z-50">
-                <button onclick="event.stopPropagation(); toggleFullScreen()" class="w-12 h-12 flex items-center justify-center bg-black/40 rounded-full backdrop-blur-md border border-white/10 active:scale-90 transition-transform text-2xl">🔲</button>
+                <!-- View Full Screen -->
+                <button id="enter-fs-btn" onclick="event.stopPropagation(); toggleFullScreen()" class="w-12 h-12 flex items-center justify-center bg-black/40 rounded-full backdrop-blur-md border border-white/10 active:scale-90 transition-transform text-2xl">⛶</button>
+                <!-- Exit Full Screen -->
+                <button id="exit-fs-btn" onclick="event.stopPropagation(); toggleFullScreen()" class="hidden w-12 h-12 flex items-center justify-center bg-black/40 rounded-full backdrop-blur-md border border-white/10 active:scale-90 transition-transform text-2xl">✕</button>
             </div>
         </div>
     </div>
@@ -187,6 +190,16 @@
         }
     }
 
+    function syncFullScreenUI() {
+        const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+        document.getElementById('enter-fs-btn').classList.toggle('hidden', !!isFS);
+        document.getElementById('exit-fs-btn').classList.toggle('hidden', !isFS);
+    }
+
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => 
+        document.addEventListener(evt, syncFullScreenUI)
+    );
+
     function toggleFullScreen() {
         const container = document.getElementById('player-wrapper');
         const videoEl = document.getElementById('video-player');
@@ -199,6 +212,13 @@
             else if (container.mozRequestFullScreen) container.mozRequestFullScreen();
             else if (container.msRequestFullscreen) container.msRequestFullscreen();
             else if (videoEl.webkitEnterFullscreen) videoEl.webkitEnterFullscreen(); // iOS specific fallback
+            
+            // Fallback UI sync for iOS which doesn't always fire standard fullscreen events
+            if (videoEl.webkitEnterFullscreen) {
+                videoEl.addEventListener('webkitbeginfullscreen', () => syncFullScreenUI());
+                videoEl.addEventListener('webkitendfullscreen', () => syncFullScreenUI());
+            }
+
         } else {
             if (document.exitFullscreen) document.exitFullscreen();
             else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
