@@ -60,7 +60,7 @@
       <iframe id="iframe-player" class="w-full h-full hidden" allow="fullscreen; autoplay" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-fullscreen" frameborder="0"></iframe>
 
       <!-- Custom Fullscreen Button -->
-      <button id="fullscreen-btn" onclick="toggleInAppFullScreen()" class="absolute bottom-4 right-4 z-[100000] bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
+      <button id="icon-fullscreen-btn" onclick="toggleInAppFullScreen()" class="absolute bottom-4 right-4 z-[100000] bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize">
           <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3m-18 0v3a2 2 0 0 0 2 2h3"></path>
         </svg>
@@ -74,7 +74,7 @@
         <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p>
       </div>
       
-      <button id="view-fullscreen-btn" onclick="toggleInAppFullScreen()" class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+      <button id="fullscreen-btn" onclick="toggleInAppFullScreen()" class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
         <span id="fullscreen-btn-text">📺 View Full Screen</span>
       </button>
     </div>
@@ -114,8 +114,8 @@
     const loader = document.getElementById('loader');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
     const chatHistory = document.getElementById('chat-history');
-    const chatInput = document.getElementById('chat-input');
-    const viewFullscreenBtn = document.getElementById('view-fullscreen-btn');
+    const iconFullscreenBtn = document.getElementById('icon-fullscreen-btn');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
     const playerWrapper = document.getElementById('player-wrapper'); // Get the player container
     const channelId = "<%= channel.id %>";
 
@@ -215,15 +215,15 @@
     // 🌀 Loading Spinner Logic
     video.addEventListener('playing', () => {
       loader.classList.add('hidden');
-      fullscreenBtn.classList.remove('hidden');
+      iconFullscreenBtn.classList.remove('hidden');
     });
     video.addEventListener('waiting', () => {
       loader.classList.remove('hidden');
-      fullscreenBtn.classList.add('hidden');
+      iconFullscreenBtn.classList.add('hidden');
     });
     iframe.onload = () => {
       loader.classList.add('hidden');
-      fullscreenBtn.classList.add('hidden'); // Hide for iframe
+      iconFullscreenBtn.classList.add('hidden'); // Hide for iframe
     };
 
     /**
