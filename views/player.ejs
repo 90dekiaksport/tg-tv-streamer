@@ -13,6 +13,7 @@
     .glass-card { background: rgba(22, 24, 32, 0.8); backdrop-filter: blur(10px); }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     #chat-box { height: 280px; overflow-y: auto; scroll-behavior: smooth; }
+    .animate-fade-in { animation: fadeIn 0.5s ease-out; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center pb-10">
@@ -35,31 +36,30 @@
 
       <video id="video-player" class="w-full h-full object-contain hidden" controls playsinline></video>
       <iframe id="iframe-player" class="w-full h-full hidden" sandbox="allow-scripts allow-same-origin allow-presentation" allowfullscreen frameborder="0"></iframe>
+
+      <!-- Custom Fullscreen Button -->
+      <button id="fullscreen-btn" class="absolute bottom-4 right-4 z-40 bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3m-18 0v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+      </button>
     </div>
 
     <!-- 📊 Metadata -->
     <div class="mt-6">
       <h2 class="text-xl font-bold"><%= channel.title %></h2>
-      <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p>
+      <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p> <%# This is where the schedule goes %>
     </div>
 
-    <!-- 💬 Live Chat Feed -->
+    <!-- 💬 Live Chat Feed Placeholder -->
     <section class="mt-8 glass-card rounded-2xl border border-white/5 overflow-hidden">
       <div class="px-4 py-3 border-b border-white/5 flex justify-between items-center">
         <span class="text-[10px] font-black tracking-widest text-gray-500 uppercase">Live Chat</span>
         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
       </div>
       
-      <div id="chat-box" class="p-4 flex flex-col gap-3 no-scrollbar">
-        <!-- Mock Messages -->
-        <div class="flex flex-col"><span class="text-[10px] text-blue-500 font-black">Abebe</span><p class="text-xs text-gray-300">Great signal today! 🇪🇹</p></div>
-        <div class="flex flex-col"><span class="text-[10px] text-blue-500 font-black">Selam</span><p class="text-xs text-gray-300">Listening from Addis!</p></div>
-        <div class="flex flex-col"><span class="text-[10px] text-blue-500 font-black">System</span><p class="text-xs text-gray-500 italic">User joined the stream...</p></div>
-      </div>
-
-      <div class="p-3 bg-black/40 flex gap-2">
-        <input id="chat-input" type="text" placeholder="Type a message..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500/50">
-        <button onclick="sendMsg()" class="bg-blue-600 px-4 py-2 rounded-lg text-xs font-bold">Send</button>
+      <div id="chat-placeholder" class="p-4 flex flex-col gap-3 h-[300px] overflow-y-auto no-scrollbar justify-end">
+        <p class="text-center text-gray-600 text-xs font-medium">Third-party live chat widget will load here.</p>
       </div>
     </section>
 
@@ -79,7 +79,7 @@
     const video = document.getElementById('video-player');
     const iframe = document.getElementById('iframe-player');
     const loader = document.getElementById('loader');
-    const chatBox = document.getElementById('chat-box');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
     
     let hls = null;
     const channelSrc = "<%= channel.src %>";
@@ -105,6 +105,7 @@
       if (isHls) {
         iframe.classList.add('hidden');
         video.classList.remove('hidden');
+        fullscreenBtn.classList.remove('hidden'); // Show fullscreen button for HLS
         
         if (Hls.isSupported()) {
           hls = new Hls({ capLevelToPlayerSize: true });
@@ -118,37 +119,30 @@
         video.classList.add('hidden');
         iframe.classList.remove('hidden');
         iframe.src = channelSrc;
+        fullscreenBtn.classList.add('hidden'); // Hide fullscreen button for iframe
       }
     }
 
-    video.addEventListener('playing', () => loader.classList.add('hidden'));
-    video.addEventListener('waiting', () => loader.classList.remove('hidden'));
-    iframe.onload = () => loader.classList.add('hidden');
+    // 🌀 Loading Spinner Logic
+    video.addEventListener('playing', () => {
+      loader.classList.add('hidden');
+      fullscreenBtn.classList.remove('hidden');
+    });
+    video.addEventListener('waiting', () => {
+      loader.classList.remove('hidden');
+      fullscreenBtn.classList.add('hidden');
+    });
+    iframe.onload = () => {
+      loader.classList.add('hidden');
+      fullscreenBtn.classList.add('hidden'); // Hide for iframe
+    };
 
-    /**
-     * 💬 Mock Chat Logic
-     */
-    function sendMsg() {
-      const input = document.getElementById('chat-input');
-      const msg = input.value.trim();
-      if (!msg) return;
-
-      const div = document.createElement('div');
-      div.className = "flex flex-col animate-fade-in";
-      div.innerHTML = `<span class="text-[10px] text-blue-500 font-black">You</span><p class="text-xs text-gray-300">${msg}</p>`;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-      input.value = "";
-
-      // Simulate a response
-      setTimeout(() => {
-        const resp = document.createElement('div');
-        resp.className = "flex flex-col";
-        resp.innerHTML = `<span class="text-[10px] text-blue-500 font-black">Listener</span><p class="text-xs text-gray-300">Listening! 📻</p>`;
-        chatBox.appendChild(resp);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 2000);
-    }
+    // Fullscreen button handler
+    fullscreenBtn.addEventListener('click', () => {
+      if (video.requestFullscreen) video.requestFullscreen();
+      else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen(); /* Safari */
+      else if (video.msRequestFullscreen) video.msRequestFullscreen(); /* IE11 */
+    });
 
     initializePlayer();
   </script>
