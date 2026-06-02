@@ -63,27 +63,38 @@
     </div>
   </header>
 
-  <main class="w-full max-w-md px-4">
-    <div class="mb-8">
+  <main class="w-full max-w-5xl px-4">
+    <div class="mb-8 max-w-md mx-auto md:mx-0">
       <h2 class="text-2xl font-black">Welcome back</h2>
       <p class="text-xs text-gray-500 font-medium">Select a match to start streaming live.</p>
     </div>
 
     <section class="pb-10">
-      <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center justify-between mb-6">
         <h3 class="text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em]">Live Matches</h3>
         <span class="text-[10px] text-blue-500/50 font-bold"><%= channels.length %> Stations</span>
       </div>
-      <div id="channel-grid" class="grid grid-cols-2 gap-4">
+      <div id="channel-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         <% channels.forEach(ch => { %>
-          <a href="/channel/<%= ch.id %>" class="glass-card p-4 rounded-xl border border-white/5 transition-all hover:border-blue-500/50 active:scale-95 block">
-            <div class="flex gap-3 items-center">
-              <div class="w-10 h-10 rounded-lg bg-black flex items-center justify-center border border-white/5 overflow-hidden">
-                <img src="<%= ch.logoLeft || 'https://placehold.co/100x100/000/3b82f6?text=FM' %>" class="w-full h-full object-cover">
+          <a href="/channel/<%= ch.id %>" class="glass-card group p-5 rounded-2xl border border-white/5 transition-all duration-300 hover:border-blue-500/50 hover:bg-white/[0.03] hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] active:scale-[0.97] flex flex-col items-center">
+            <!-- 🎏 Multi-Country Team & Flag Component -->
+            <div class="flex items-center justify-around w-full mb-5 px-1">
+              <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-black/50 border border-white/10 flex items-center justify-center overflow-hidden shadow-inner transform transition-transform group-hover:scale-110">
+                <img src="<%= ch.logoLeft || 'https://placehold.co/100x100/000/3b82f6?text=T1' %>" class="w-full h-full object-cover" alt="Team 1">
               </div>
-              <div class="flex flex-col">
-                <span class="text-[11px] font-bold tracking-tight truncate w-24"><%= ch.title %></span>
-                <span class="text-[9px] text-gray-500 uppercase font-black tracking-widest">LIVE</span>
+              <div class="flex flex-col items-center">
+                <span class="text-[10px] font-black italic text-blue-500/50">VS</span>
+              </div>
+              <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-black/50 border border-white/10 flex items-center justify-center overflow-hidden shadow-inner transform transition-transform group-hover:scale-110">
+                <img src="<%= ch.logoRight || 'https://placehold.co/100x100/000/3b82f6?text=T2' %>" class="w-full h-full object-cover" alt="Team 2">
+              </div>
+            </div>
+            <!-- 📊 Match Info -->
+            <div class="text-center w-full">
+              <h4 class="text-[12px] font-extrabold tracking-tight text-white mb-2 line-clamp-1"><%= ch.title %></h4>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20">
+                <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                <span class="text-[8px] font-black text-red-500 uppercase tracking-widest">Live Now</span>
               </div>
             </div>
           </a>
