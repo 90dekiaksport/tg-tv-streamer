@@ -2,7 +2,7 @@
   {
     "id": "mexico-southafrica",
     "title": "Mexico vs South Africa",
-    "description": "JUNE 11 | 22:00 PM THURSDAY",
+    "description": "JUNE 11 | 10:00 PM THURSDAY",
     "src": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/a/af/Flag_of_South_Africa.svg"
@@ -18,7 +18,7 @@
   {
     "id": "canada-BiH",
     "title": "Canada vs Bosnia and Herzegovina",
-    "description": "JUNE 12 | 22:00 PM FRIDAY",
+    "description": "JUNE 12 | 10:00 PM FRIDAY",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/en/c/cf/Flag_of_Canada.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Flag_of_Bosnia_and_Herzegovina.svg"
@@ -60,7 +60,7 @@
     "title": "Australia vs Turkey",
     "description": "JUNE 14 | 07:00 AM SUNDAY",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
-    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/8/88/Flag_of_Australia.svg",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/8/88/Flag_of_Australia_%28converted%29.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Flag_of_Turkey.svg"
   },
   {
@@ -84,7 +84,7 @@
     "title": "Ivory Coast vs Ecuador",
     "description": "JUNE 15 | 02:00 AM MONDAY",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
-    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/8/85/Flag_of_C%C3%B4te_d%27Ivoire.svg",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_C%C3%B4te_d%27Ivoire.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Flag_of_Ecuador.svg"
   },
   {
@@ -100,7 +100,7 @@
     "title": "Spain vs Cape Verde",
     "description": "JUNE 15 | 07:00 PM MONDAY",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
-    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/8/89/Flag_of_Spain.svg",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Spain.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/3/38/Flag_of_Cape_Verde.svg"
   },
   {
@@ -109,7 +109,7 @@
     "description": "JUNE 15 | 10:00 PM MONDAY",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/6/65/Flag_of_Belgium.svg",
-    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/fe/fe/Flag_of_Egypt.svg"
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Egypt_%28variant%29.svg"
   },
   {
     "id": "saudiarabia-uruguay",
@@ -117,7 +117,7 @@
     "description": "JUNE 16 | 01:00 AM TUESDAY",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg",
-    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Flag_of_Uruguay.svg"
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg"
   },
   {
     "id": "iran-newzealand",
