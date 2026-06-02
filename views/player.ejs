@@ -11,7 +11,18 @@
   <style>
     body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; background-color: #0b0c10; }
     .glass-card { background: rgba(22, 24, 32, 0.8); backdrop-filter: blur(10px); }
-    .player-aspect { aspect-ratio: 16 / 9; }
+    .player-aspect { aspect-ratio: 16 / 9; position: relative; width: 100%; }
+    .pseudo-fullscreen {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+        z-index: 10000 !important;
+        background: #000 !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+    }
     .control-gradient { background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%); }
     input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: #ffffff; cursor: pointer; border: 2px solid #3b82f6; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -44,21 +55,21 @@
     </div>
 
     <!-- 📺 Player Container -->
-    <div id="player-wrapper" class="relative player-aspect w-full bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/5 group">
-        <div id="loading-spinner" class="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <div class="w-8 h-8 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+    <div id="player-wrapper" class="w-full bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/5 flex flex-col">
+        <div class="player-aspect">
+            <div id="loading-spinner" class="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                <div class="w-8 h-8 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+            </div>
+            <!-- Video Elements -->
+            <video id="video-player" class="w-full h-full object-contain" playsinline></video>
+            <iframe id="iframe-player" class="hidden w-full h-full border-none" 
+                    sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-autoplay allow-fullscreen" allowfullscreen></iframe>
         </div>
-
-        <!-- Video Elements -->
-        <video id="video-player" class="w-full h-full object-contain" playsinline></video>
-        <iframe id="iframe-player" class="hidden w-full h-full border-none" 
-                sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-autoplay allow-fullscreen" allowfullscreen></iframe>
-    </div>
-
-    <!--  Full Screen Controls (Text Based) -->
-    <div class="mt-4 flex justify-center gap-4">
-        <button id="enter-fs-btn" onclick="toggleFullScreen()" class="px-6 py-2 rounded-xl bg-blue-600 text-[11px] font-bold uppercase tracking-widest active:scale-95 transition-all">View Full Screen</button>
-        <button id="exit-fs-btn" onclick="toggleFullScreen()" class="hidden px-6 py-2 rounded-xl bg-red-600 text-[11px] font-bold uppercase tracking-widest active:scale-95 transition-all">Exit Full Screen</button>
+        <!--  Full Screen Controls (Text Based) -->
+        <div id="fs-controls" class="py-4 flex justify-center gap-4 bg-[#0b0c10]">
+            <button id="enter-fs-btn" onclick="toggleFullScreen()" class="px-6 py-2 rounded-xl bg-blue-600 text-[11px] font-bold uppercase tracking-widest active:scale-95 transition-all">View Full Screen</button>
+            <button id="exit-fs-btn" onclick="toggleFullScreen()" class="hidden px-6 py-2 rounded-xl bg-red-600 text-[11px] font-bold uppercase tracking-widest active:scale-95 transition-all">Exit Full Screen</button>
+        </div>
     </div>
 
     <!--  Live Chat Module -->
@@ -171,10 +182,22 @@
         }
     }
 
+    let isPseudoFS = false;
+
     function syncFullScreenUI() {
-        const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-        document.getElementById('enter-fs-btn').classList.toggle('hidden', !!isFS);
+        const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || isPseudoFS);
+        document.getElementById('enter-fs-btn').classList.toggle('hidden', isFS);
         document.getElementById('exit-fs-btn').classList.toggle('hidden', !isFS);
+        
+        const wrapper = document.getElementById('player-wrapper');
+        const aspectBox = wrapper.querySelector('.player-aspect');
+        if (isFS) {
+            aspectBox.style.height = isPseudoFS ? "calc(100dvh - 60px)" : "100%";
+            aspectBox.style.aspectRatio = "auto";
+        } else {
+            aspectBox.style.height = "";
+            aspectBox.style.aspectRatio = "16 / 9";
+        }
     }
 
     ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => 
@@ -184,28 +207,36 @@
     function toggleFullScreen() {
         const container = document.getElementById('player-wrapper');
         const videoEl = document.getElementById('video-player');
-
         const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
 
-        if (!isFS) {
-            if (container.requestFullscreen) container.requestFullscreen();
-            else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
-            else if (container.mozRequestFullScreen) container.mozRequestFullScreen();
-            else if (container.msRequestFullscreen) container.msRequestFullscreen();
-            else if (videoEl.webkitEnterFullscreen) videoEl.webkitEnterFullscreen(); // iOS specific fallback
-            
-            // Fallback UI sync for iOS which doesn't always fire standard fullscreen events
-            if (videoEl.webkitEnterFullscreen) {
-                videoEl.addEventListener('webkitbeginfullscreen', () => syncFullScreenUI());
-                videoEl.addEventListener('webkitendfullscreen', () => syncFullScreenUI());
+        if (!isFS && !isPseudoFS) {
+            const requestFS = container.requestFullscreen || container.webkitRequestFullscreen || container.mozRequestFullScreen || container.msRequestFullscreen;
+            if (requestFS) {
+                requestFS.call(container).catch(() => enterPseudoFS());
+            } else if (videoEl.webkitEnterFullscreen) {
+                videoEl.webkitEnterFullscreen();
+            } else {
+                enterPseudoFS();
             }
-
         } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
+            if (isFS) {
+                const exitFS = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+                if (exitFS) exitFS.call(document);
+            }
+            if (isPseudoFS) exitPseudoFS();
         }
+    }
+
+    function enterPseudoFS() {
+        document.getElementById('player-wrapper').classList.add('pseudo-fullscreen');
+        isPseudoFS = true;
+        syncFullScreenUI();
+    }
+
+    function exitPseudoFS() {
+        document.getElementById('player-wrapper').classList.remove('pseudo-fullscreen');
+        isPseudoFS = false;
+        syncFullScreenUI();
     }
 
     function formatTime(seconds) {
