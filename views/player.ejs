@@ -44,7 +44,7 @@
     </div>
 
     <!-- 📺 Player Container -->
-    <div id="player-wrapper" onclick="toggleControls()" class="relative player-aspect w-full bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/5 group">
+    <div id="player-wrapper" class="relative player-aspect w-full bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/5 group">
         <div id="loading-spinner" class="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <div class="w-8 h-8 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
         </div>
@@ -53,17 +53,12 @@
         <video id="video-player" class="w-full h-full object-contain" playsinline></video>
         <iframe id="iframe-player" class="hidden w-full h-full border-none" 
                 sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-autoplay allow-fullscreen" allowfullscreen></iframe>
+    </div>
 
-        <!-- 📺 Minimalist Control Overlay -->
-        <div id="controls-overlay" class="absolute inset-0 z-40 flex flex-col opacity-0 transition-opacity duration-300 pointer-events-none group-active:opacity-100">
-            <div class="flex-1"></div>
-            <div class="p-6 flex justify-end pointer-events-auto relative z-50">
-                <!-- View Full Screen -->
-                <button id="enter-fs-btn" onclick="event.stopPropagation(); toggleFullScreen()" class="w-12 h-12 flex items-center justify-center bg-black/40 rounded-full backdrop-blur-md border border-white/10 active:scale-90 transition-transform text-2xl">⛶</button>
-                <!-- Exit Full Screen -->
-                <button id="exit-fs-btn" onclick="event.stopPropagation(); toggleFullScreen()" class="hidden w-12 h-12 flex items-center justify-center bg-black/40 rounded-full backdrop-blur-md border border-white/10 active:scale-90 transition-transform text-2xl">✕</button>
-            </div>
-        </div>
+    <!--  Full Screen Controls (Text Based) -->
+    <div class="mt-4 flex justify-center gap-4">
+        <button id="enter-fs-btn" onclick="toggleFullScreen()" class="px-6 py-2 rounded-xl bg-blue-600 text-[11px] font-bold uppercase tracking-widest active:scale-95 transition-all">View Full Screen</button>
+        <button id="exit-fs-btn" onclick="toggleFullScreen()" class="hidden px-6 py-2 rounded-xl bg-red-600 text-[11px] font-bold uppercase tracking-widest active:scale-95 transition-all">Exit Full Screen</button>
     </div>
 
     <!--  Live Chat Module -->
@@ -116,20 +111,6 @@
     // 🛡️ Security: Redirect prevention
     window.open = () => null;
     iframe.onload = () => loader.classList.add('hidden');
-
-    // Toggle overlay for mobile tapping
-    let controlsTimeout;
-    function toggleControls() {
-        const overlay = document.getElementById('controls-overlay');
-        overlay.classList.remove('opacity-0');
-        overlay.classList.add('opacity-100');
-        
-        clearTimeout(controlsTimeout);
-        controlsTimeout = setTimeout(() => {
-            overlay.classList.add('opacity-0');
-            overlay.classList.remove('opacity-100');
-        }, 3000);
-    }
 
     function switchServer(index) {
         const srv = servers[index];
