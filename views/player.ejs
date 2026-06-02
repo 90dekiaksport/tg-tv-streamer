@@ -40,7 +40,7 @@
       </div>
 
       <video id="video-player" class="w-full h-full object-contain hidden" controls playsinline></video>
-      <iframe id="iframe-player" class="w-full h-full hidden" sandbox="allow-scripts allow-same-origin allow-presentation" allowfullscreen frameborder="0"></iframe>
+      <iframe id="iframe-player" class="w-full h-full hidden" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-fullscreen" allowfullscreen frameborder="0"></iframe>
 
       <!-- Custom Fullscreen Button -->
       <button id="fullscreen-btn" class="absolute bottom-4 right-4 z-40 bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
@@ -210,9 +210,18 @@
 
     // Fullscreen button handlers
     function toggleFullscreen() {
-      const activePlayer = video.style.display !== 'none' ? video : iframe;
-      if (activePlayer.requestFullscreen) activePlayer.requestFullscreen();
-      else if (activePlayer.webkitRequestFullscreen) activePlayer.webkitRequestFullscreen();
+      // Detect which player is currently visible/active
+      const activePlayer = (video && video.style.display !== 'none') ? video : iframe;
+      
+      if (!activePlayer) return;
+
+      if (activePlayer.requestFullscreen) {
+        activePlayer.requestFullscreen();
+      } else if (activePlayer.webkitRequestFullscreen) { /* iOS / Safari / Telegram Webview */
+        activePlayer.webkitRequestFullscreen();
+      } else if (activePlayer.msRequestFullscreen) { /* IE / Edge */
+        activePlayer.msRequestFullscreen();
+      }
     }
 
     fullscreenBtn.addEventListener('click', toggleFullscreen);
