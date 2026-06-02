@@ -50,10 +50,16 @@
       </button>
     </div>
 
-    <!-- 📊 Metadata -->
-    <div class="mt-6">
-      <h2 class="text-xl font-bold"><%= channel.title %></h2>
-      <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p> <%# This is where the schedule goes %>
+    <!-- 📊 Metadata & Action Buttons -->
+    <div class="mt-6 flex flex-col gap-4">
+      <div>
+        <h2 class="text-xl font-bold"><%= channel.title %></h2>
+        <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p>
+      </div>
+      
+      <button id="view-fullscreen-btn" class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+        <span>📺 View Full Screen</span>
+      </button>
     </div>
 
     <!-- 💬 Interactive Live Chat Component -->
@@ -92,15 +98,43 @@
     const fullscreenBtn = document.getElementById('fullscreen-btn');
     const chatHistory = document.getElementById('chat-history');
     const chatInput = document.getElementById('chat-input');
+    const viewFullscreenBtn = document.getElementById('view-fullscreen-btn');
+    const channelId = "<%= channel.id %>";
 
     /**
-     * 💬 Live Chat Logic (Optimized Local Simulation)
+     * 💬 Global Live Chat Sync
      */
-    const botNames = ["Yonas", "Selam", "Desta", "Hagos", "Abebe", "Kebede", "Mulu"];
-    const botMsgs = [
-      "እንኳን ደህና መጣችሁ! 🇪🇹", "Great quality today!", "Who's winning?", 
-      "Go Ethiopia!! 🦁", "Love this app interface", "Signal is very stable", "በጣም ደስ ይላል"
-    ];
+    let lastMessageCount = 0;
+    const userName = telegram.initDataUnsafe.user?.first_name || "You";
+
+    async function fetchMessages() {
+      try {
+        const res = await fetch(`/api/chat/${channelId}`);
+        const messages = await res.json();
+        
+        if (messages.length !== lastMessageCount) {
+          chatHistory.innerHTML = "";
+          messages.forEach(m => appendMessage(m.username, m.text, m.username === userName));
+          lastMessageCount = messages.length;
+          chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+      } catch (err) { console.error("Sync error:", err); }
+    }
+
+    async function sendMsg() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      
+      try {
+        await fetch(`/api/chat/${channelId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: userName, text })
+        });
+        chatInput.value = "";
+        fetchMessages();
+      } catch (err) { alert("Message failed to send."); }
+    }
 
     function appendMessage(name, text, isUser = false) {
       const msgDiv = document.createElement('div');
@@ -114,24 +148,9 @@
         </div>
       `;
       chatHistory.appendChild(msgDiv);
-      chatHistory.scrollTop = chatHistory.scrollHeight;
-    }
-
-    function sendMsg() {
-      const text = chatInput.value.trim();
-      if (!text) return;
-      appendMessage("You", text, true);
-      chatInput.value = "";
     }
 
     chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMsg(); });
-
-    // Simulated crowd activity interval
-    setInterval(() => {
-      const name = botNames[Math.floor(Math.random() * botNames.length)];
-      const msg = botMsgs[Math.floor(Math.random() * botMsgs.length)];
-      appendMessage(name, msg);
-    }, 4500);
     
     let hls = null;
     const channelSrc = "<%= channel.src %>";
@@ -189,13 +208,19 @@
       fullscreenBtn.classList.add('hidden'); // Hide for iframe
     };
 
-    // Fullscreen button handler
-    fullscreenBtn.addEventListener('click', () => {
-      if (video.requestFullscreen) video.requestFullscreen();
-      else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen(); /* Safari */
-      else if (video.msRequestFullscreen) video.msRequestFullscreen(); /* IE11 */
-    });
+    // Fullscreen button handlers
+    function toggleFullscreen() {
+      const activePlayer = video.style.display !== 'none' ? video : iframe;
+      if (activePlayer.requestFullscreen) activePlayer.requestFullscreen();
+      else if (activePlayer.webkitRequestFullscreen) activePlayer.webkitRequestFullscreen();
+    }
 
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+    viewFullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    // Start Sync
+    setInterval(fetchMessages, 2000);
+    fetchMessages();
     initializePlayer();
   </script>
 </body>
