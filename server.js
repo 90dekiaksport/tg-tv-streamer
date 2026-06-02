@@ -4,20 +4,13 @@ import path from "path";
 const app = express();
 const port = process.env.PORT || 3000;
 
-const channels = {
-  news: "https://example.com/stream/news",
-  sports: "https://example.com/stream/sports",
-  movies: "https://example.com/stream/movies"
-};
+// Serve the 'player' folder as static files
+// This makes streams.json accessible at /player/streams.json
+app.use("/player", express.static(path.join(process.cwd(), "player")));
 
-app.set("views", path.join(process.cwd(), "views"));
-app.set("view engine", "ejs");
-app.use(express.static(path.join(process.cwd(), "public")));
-
+// Route the root URL to serve the premium player UI
 app.get("/", (req, res) => {
-  const selected = req.query.channel || "news";
-  const url = channels[selected] || channels.news;
-  res.render("index", { channels, selected, url });
+  res.sendFile(path.join(process.cwd(), "player", "index.html"));
 });
 
 app.listen(port, () => {

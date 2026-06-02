@@ -256,7 +256,8 @@
     telegram.ready();
     telegram.expand();
 
-    const configUrl = "https://YOUR_GITHUB_USERNAME.github.io/telegram-tv/player/streams.json";
+    // Point to the local streams.json served by your Express server
+    const configUrl = "/player/streams.json";
 
     const defaultChannels = [
       {
@@ -337,21 +338,26 @@
     }
 
     function renderChannels(list) {
-      selectEl.innerHTML = "";
-      list.forEach(channel => selectEl.append(createOption(channel)));
-      selectEl.disabled = list.length === 0;
+      listEl.innerHTML = "";
+      list.forEach(channel => {
+        const card = document.createElement("div");
+        card.className = "channel-card";
+        card.dataset.id = channel.id;
+        card.innerHTML = `<span class="card-title">${channel.title}</span>`;
+        card.onclick = () => setChannel(channel);
+        listEl.appendChild(card);
+      });
     }
 
-    function selectChannelById(id) {
-      const channel = channels.find(channel => channel.id === id) || channels[0];
-      if (channel) {
-        setChannel(channel);
-      }
+    function updateActiveCard(id) {
+      document.querySelectorAll(".channel-card").forEach(card => {
+        card.classList.toggle("active", card.dataset.id === id);
+      });
     }
 
     async function loadRemoteConfig() {
       try {
-        updateStatus("Loading channel list...");
+        updateStatus("Syncing catalog...");
         const response = await fetch(configUrl, { cache: "no-store" });
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
@@ -360,9 +366,8 @@
         if (Array.isArray(remoteChannels) && remoteChannels.length > 0) {
           channels = remoteChannels;
           renderChannels(channels);
-          selectEl.value = channels[0].id;
-          selectChannelById(channels[0].id);
-          updateStatus("Channel list updated from remote config.");
+          setChannel(channels[0]);
+          updateStatus("Live Connection");
           return;
         }
         throw new Error("Remote config returned invalid channel data.");
@@ -370,26 +375,17 @@
         console.warn("Remote config failed:", error);
         if (channels.length > 0) {
           renderChannels(channels);
-          selectEl.value = channels[0].id;
-          selectChannelById(channels[0].id);
-          updateStatus("Using local fallback channels.");
+          setChannel(channels[0]);
+          updateStatus("Offline mode active");
         } else {
           updateStatus("No channels available.");
         }
       }
     }
 
-    selectEl.addEventListener("change", () => {
-      const selected = channels.find(channel => channel.id === selectEl.value);
-      if (selected) {
-        setChannel(selected);
-      }
-    });
-
     renderChannels(channels);
     if (channels.length > 0) {
-      selectEl.value = channels[0].id;
-      selectChannelById(channels[0].id);
+      setChannel(channels[0]);
     }
 
     loadRemoteConfig();
