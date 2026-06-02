@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import { exec } from "child_process";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -43,15 +42,9 @@ app.listen(port, () => {
   console.log(`Web app running at http://localhost:${port}`);
 });
 
-// Automatically launch the bot script alongside the web server
-console.log("🔄 Starting background Telegram bot listener...");
-exec("node bot.js", (error, stdout, stderr) => {
-  if (error) {
-    console.error(`Bot execution error: ${error}`);
-    return;
-  }
-  if (stderr) {
-    console.error(`Bot stderr: ${stderr}`);
-  }
-  console.log(`Bot stdout: ${stdout}`);
+// Paste this at the absolute bottom of server.js to load your bot safely!
+import('./bot.js').then(() => {
+  console.log("🚀 Success! Bot script imported and listening directly inside the server pipeline.");
+}).catch((err) => {
+  console.error("❌ Failed to initialize bot bundle directly:", err);
 });
