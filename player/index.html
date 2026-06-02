@@ -163,39 +163,47 @@
 
     .channel-list {
       display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding: 0 20px 10px;
-      scrollbar-width: none;
-    }
-
-    .channel-list::-webkit-scrollbar {
-      display: none;
+      flex-direction: column;
+      gap: 16px;
+      padding: 0 20px 40px;
     }
 
     .channel-card {
-      flex: 0 0 140px;
+      width: 100%;
+      aspect-ratio: 16 / 8;
       background: var(--card-bg);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 16px;
       cursor: pointer;
       transition: all 0.2s ease;
       border: 1px solid rgba(255, 255, 255, 0.05);
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
-      min-height: 80px;
+      overflow: hidden;
     }
+
+    .card-top { padding: 12px; display: flex; }
+    .card-middle {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+    .team-logo { width: 55px; height: 35px; object-fit: contain; }
+    .vs-divider { font-weight: 800; font-size: 1.1rem; opacity: 0.5; font-style: italic; }
+
+    .card-bottom {
+      padding: 12px 16px;
+      background: rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+    .card-desc { font-size: 0.75rem; color: var(--text-secondary); }
 
     .channel-card.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      box-shadow: 0 8px 20px var(--accent-glow);
-    }
-
-    .channel-card .card-title {
-      font-size: 0.9rem;
-      font-weight: 600;
+      border-color: #ff4d4d;
+      box-shadow: 0 8px 24px rgba(255, 77, 77, 0.15);
     }
 
     .status-bar {
@@ -343,7 +351,20 @@
         const card = document.createElement("div");
         card.className = "channel-card";
         card.dataset.id = channel.id;
-        card.innerHTML = `<span class="card-title">${channel.title}</span>`;
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="live-badge"><div class="pulse-dot"></div> LIVE</div>
+          </div>
+          <div class="card-middle">
+            <img src="${channel.logoLeft}" class="team-logo">
+            <div class="vs-divider">VS</div>
+            <img src="${channel.logoRight}" class="team-logo">
+          </div>
+          <div class="card-bottom">
+            <span class="card-title">${channel.title}</span>
+            <span class="card-desc">${channel.description}</span>
+          </div>
+        `;
         card.onclick = () => setChannel(channel);
         listEl.appendChild(card);
       });
