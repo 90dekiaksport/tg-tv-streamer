@@ -15,20 +15,46 @@
     #chat-box { height: 280px; overflow-y: auto; scroll-behavior: smooth; }
     #chat-history { height: 260px; overflow-y: auto; scroll-behavior: smooth; }
     .animate-fade-in { animation: fadeIn 0.5s ease-out; }
-    
-    /* 📺 CSS-Based Fullscreen Toggle */
-    .custom-fullscreen-active {
+
+    /* 📺 Pure CSS-Driven Fullscreen Overlay */
+    #player-wrapper {
+      width: 100%;
+      max-width: 28rem; /* max-w-md */
+      aspect-ratio: 16 / 9;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    /* Extreme absolute overlay state that ignores iframe intercepts */
+    #player-wrapper.is-fullscreen {
       position: fixed !important;
       top: 0 !important;
       left: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
-      z-index: 99999 !important;
       max-width: none !important;
+      z-index: 999999 !important;
+      background-color: #000000 !important;
       border-radius: 0 !important;
-      margin: 0 !important;
     }
-    .hide-during-fullscreen {
+
+    /* Make sure the iframe fills its wrapper completely in both states */
+    #player-wrapper iframe, #player-wrapper video {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Floating button setup specifically when active */
+    #player-wrapper.is-fullscreen #fullscreen-btn {
+      position: fixed !important;
+      top: 12px !important;
+      right: 12px !important;
+      z-index: 9999999 !important;
+      width: auto !important;
+      background-color: rgba(220, 38, 38, 0.9) !important; /* Semi-transparent red */
+    }
+
+    .hide-layout {
       display: none !important;
     }
 
@@ -50,7 +76,7 @@
 
   <main class="w-full max-w-md px-4">
     <!-- 📺 Smart Player -->
-    <div id="player-wrapper" class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/5 shadow-2xl">
+    <div id="player-wrapper" class="bg-black rounded-2xl border border-gray-800 overflow-hidden shadow-2xl mb-6">
       <div id="loader" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0b0c10]">
         <div class="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
         <span class="mt-4 text-[10px] font-bold uppercase tracking-widest text-blue-500/60">Buffering</span>
@@ -59,24 +85,21 @@
       <video id="video-player" class="w-full h-full object-contain hidden" controls playsinline></video>
       <iframe id="iframe-player" class="w-full h-full hidden" allow="fullscreen; autoplay" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-fullscreen" frameborder="0"></iframe>
 
-      <!-- Custom Fullscreen Button -->
-      <button id="icon-fullscreen-btn" onclick="toggleInAppFullScreen()" class="absolute bottom-4 right-4 z-[100000] bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize">
-          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3m-18 0v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
+      <!-- 🚀 Full Screen Button (Nested inside wrapper to prevent iframe interception) -->
+      <button id="fullscreen-btn" onclick="toggleAbsoluteView()" class="w-full mt-2 py-2 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm">
+        <span id="btn-text">📺 VIEW FULL SCREEN</span>
+      </button>
+
+      <!-- Icon toggle for fallback -->
+      <button id="icon-fullscreen-btn" onclick="toggleAbsoluteView()" class="absolute bottom-12 right-4 z-[100000] bg-black/50 p-2 rounded-lg text-white hover:bg-black/70 transition-all hidden" aria-label="Toggle fullscreen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3m-18 0v3a2 2 0 0 0 2 2h3"></path></svg>
       </button>
     </div>
 
-    <!-- 📊 Metadata & Action Buttons -->
-    <div class="mt-6 flex flex-col gap-4">
-      <div>
-        <h2 class="text-xl font-bold"><%= channel.title %></h2>
-        <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p>
-      </div>
-      
-      <button id="fullscreen-btn" onclick="toggleInAppFullScreen()" class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-        <span id="fullscreen-btn-text">📺 View Full Screen</span>
-      </button>
+    <!-- 📊 Metadata -->
+    <div class="mt-6">
+      <h2 class="text-xl font-bold"><%= channel.title %></h2>
+      <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p>
     </div>
 
     <!-- 💬 Interactive Live Chat Component -->
@@ -112,11 +135,9 @@
     const video = document.getElementById('video-player');
     const iframe = document.getElementById('iframe-player');
     const loader = document.getElementById('loader');
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
     const chatHistory = document.getElementById('chat-history');
     const iconFullscreenBtn = document.getElementById('icon-fullscreen-btn');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
-    const playerWrapper = document.getElementById('player-wrapper'); // Get the player container
     const channelId = "<%= channel.id %>";
 
     /**
