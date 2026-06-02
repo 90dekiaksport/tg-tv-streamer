@@ -204,7 +204,7 @@
         document.addEventListener(evt, syncFullScreenUI)
     );
 
-    function toggleFullScreen() {
+    async function toggleFullScreen() {
         const container = document.getElementById('player-wrapper');
         const videoEl = document.getElementById('video-player');
         const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
@@ -212,7 +212,15 @@
         if (!isFS && !isPseudoFS) {
             const requestFS = container.requestFullscreen || container.webkitRequestFullscreen || container.mozRequestFullScreen || container.msRequestFullscreen;
             if (requestFS) {
-                requestFS.call(container).catch(() => enterPseudoFS());
+                try {
+                    await requestFS.call(container);
+                    // Try to lock orientation after entering true fullscreen
+                    if (screen.orientation && screen.orientation.lock) {
+                        await screen.orientation.lock('landscape').catch(e => console.log("Orientation lock failed:", e));
+                    }
+                } catch (err) {
+                    enterPseudoFS();
+                }
             } else if (videoEl.webkitEnterFullscreen) {
                 videoEl.webkitEnterFullscreen();
             } else {
@@ -222,20 +230,30 @@
             if (isFS) {
                 const exitFS = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
                 if (exitFS) exitFS.call(document);
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
             }
             if (isPseudoFS) exitPseudoFS();
         }
     }
 
-    function enterPseudoFS() {
+    async function enterPseudoFS() {
         document.getElementById('player-wrapper').classList.add('pseudo-fullscreen');
         isPseudoFS = true;
+        // Pseudo-fullscreen doesn't always allow API locking, but we try anyway
+        if (screen.orientation && screen.orientation.lock) {
+            await screen.orientation.lock('landscape').catch(() => {});
+        }
         syncFullScreenUI();
     }
 
     function exitPseudoFS() {
         document.getElementById('player-wrapper').classList.remove('pseudo-fullscreen');
         isPseudoFS = false;
+        if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+        }
         syncFullScreenUI();
     }
 
