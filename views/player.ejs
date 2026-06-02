@@ -54,35 +54,16 @@
         <iframe id="iframe-player" class="hidden w-full h-full border-none" 
                 sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"></iframe>
 
-        <!-- 📺 Custom Control Overlay -->
-        <div id="controls-overlay" class="absolute inset-0 z-40 control-gradient flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-active:opacity-100">
-            <!-- Top Row -->
-            <div class="p-4 flex justify-end">
-                <span id="quality-badge" class="px-2 py-0.5 rounded bg-blue-500 text-[8px] font-black uppercase">HD</span>
-            </div>
-
-            <!-- Center Controls -->
-            <div class="flex-1 flex items-center justify-center gap-8 pointer-events-auto">
-                <button onclick="rewind()" class="text-white/80 hover:text-white transition-colors">⏪</button>
-                <button id="play-pause-btn" onclick="togglePlay()" class="w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-2xl backdrop-blur-md hover:scale-110 transition-transform">▶️</button>
-                <button onclick="fastForward()" class="text-white/80 hover:text-white transition-colors">⏩</button>
-            </div>
-
-            <!-- Bottom Controls -->
-            <div class="p-6 pointer-events-auto">
-                <div class="flex items-center justify-between mb-2">
-                    <span id="timestamp" class="text-[10px] font-mono text-gray-400">00:00 / 00:00</span>
-                    <div class="flex gap-4">
-                        <button class="text-xs grayscale opacity-50">⚙️</button>
-                        <button onclick="toggleFullScreen()" class="text-xs">🔲</button>
-                    </div>
-                </div>
-                <input type="range" id="progress-bar" value="0" min="0" max="100" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-500">
+        <!-- 📺 Minimalist Control Overlay -->
+        <div id="controls-overlay" class="absolute inset-0 z-40 flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-active:opacity-100">
+            <div class="flex-1"></div>
+            <div class="p-6 flex justify-end pointer-events-auto">
+                <button onclick="toggleFullScreen()" class="text-2xl hover:scale-110 transition-transform">🔲</button>
             </div>
         </div>
     </div>
 
-    <!-- 💬 Live Chat Module -->
+    <!--  Live Chat Module -->
     <section class="mt-8 mb-20">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Match Chat</h3>
@@ -181,20 +162,6 @@
         }
     }
 
-    // 🎛️ Custom Controls Logic
-    function togglePlay() {
-        const btn = document.getElementById('play-pause-btn');
-        if (video.paused) {
-            video.play();
-            btn.textContent = '⏸️';
-        } else {
-            video.pause();
-            btn.textContent = '▶️';
-        }
-    }
-
-    function rewind() { video.currentTime -= 10; }
-    function fastForward() { video.currentTime += 10; }
     function toggleFullScreen() {
         if (!document.fullscreenElement) {
             document.getElementById('player-wrapper').requestFullscreen();
@@ -202,16 +169,6 @@
             document.exitFullscreen();
         }
     }
-
-    // Timeline Updates
-    video.addEventListener('timeupdate', () => {
-        const progress = (video.currentTime / video.duration) * 100;
-        document.getElementById('progress-bar').value = progress || 0;
-        
-        const current = formatTime(video.currentTime);
-        const total = formatTime(video.duration || 0);
-        document.getElementById('timestamp').textContent = `${current} / ${total}`;
-    });
 
     function formatTime(seconds) {
         const h = Math.floor(seconds / 3600);
