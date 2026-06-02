@@ -245,7 +245,7 @@
           <div class="spinner"></div>
         </div>
         <video id="video" playsinline controls></video>
-        <iframe id="iframe-player" style="display: none;" allowfullscreen></iframe>
+        <iframe id="iframe-player" style="display: none;" sandbox="allow-forms allow-scripts allow-same-origin" allowfullscreen></iframe>
       </div>
     </div>
 
@@ -304,6 +304,24 @@
     const video = document.getElementById("video");
     const iframe = document.getElementById("iframe-player");
     let hls;
+
+    /**
+     * 🛡️ AGGRESSIVE AD & REDIRECT BLOCKING
+     */
+    // Prevent new window creation
+    window.open = function() { return null; };
+    
+    // Prevent the parent window from being redirected
+    window.onbeforeunload = function() {
+      return "Blocked attempt to open external site.";
+    };
+
+    // If the iframe tries to steal focus for an ad, snatch it back
+    window.addEventListener('blur', () => {
+      if (document.activeElement === iframe) {
+        setTimeout(() => window.focus(), 100);
+      }
+    });
 
     // Robust UI Fix: Hide loading overlay whenever video actually starts playing or fails
     video.addEventListener('playing', () => loadingOverlay.classList.remove("active"));

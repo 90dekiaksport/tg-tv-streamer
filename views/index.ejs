@@ -57,7 +57,7 @@
       <iframe 
         id="iframe-player" 
         class="w-full h-full hidden" 
-        sandbox="allow-scripts allow-same-origin allow-presentation" 
+        sandbox="allow-forms allow-scripts allow-same-origin" 
         allowfullscreen 
         frameborder="0">
       </iframe>
@@ -110,6 +110,25 @@
     
     let hls = null;
     let currentChannels = [];
+
+    /**
+     * 🛡️ AGGRESSIVE AD & REDIRECT BLOCKING
+     */
+    // 1. Prevent scripts from opening new windows/tabs
+    window.open = function() { return null; };
+    
+    // 2. Lock the top-level navigation to prevent "Top-Level Redirects"
+    window.onbeforeunload = function() {
+      return "External navigation blocked by Security Shield.";
+    };
+
+    // 3. Prevent focus loss (common ad behavior)
+    window.addEventListener('blur', () => {
+      if (document.activeElement === iframe) {
+        console.log("🛡️ Shield: Potential ad popup intercepted.");
+        setTimeout(() => window.focus(), 100);
+      }
+    });
 
     /**
      * 🛡️ Aggressive Ad Blocking Logic for Quality Buttons
