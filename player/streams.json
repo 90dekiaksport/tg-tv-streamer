@@ -5,9 +5,7 @@
     "description": "JUNE 11 | 10:00 PM THURSDAY",
     "servers": [
       { "name": "Server 1", "url": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0", "type": "iframe" },
-      { "name": "Server 2", "url": "http://het4444.ycn-redirect.com/live/9787488847/index.m3u8?t=BoWLVAOKEhgcuYZNg1-brA&e=1780416489", "type": "m3u8" },
-      { "name": "Server 3", "url": "http://het105c.ycn-redirect.com/live/918454578001/index.m3u8?t=YrKmiYxGldSihwKFsxM7BQ&e=1780416491", "type": "m3u8" },
-      { "name": "Server 4", "url": "http://het4444.ycn-redirect.com/live/918454578001/index.m3u8?t=YrKmiYxGldSihwKFsxM7BQ&e=1780416491", "type": "iframe" }
+      { "name": "Server 4", "url": "https://11.yallashoot1.cc/albaplayer/1bein1/", "type": "iframe" }
     ],
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/a/af/Flag_of_South_Africa.svg"
@@ -18,7 +16,7 @@
     "description": "JUNE 12 | 05:00 AM FRIDAY",
     "servers": [
       { "name": "Server 1", "url": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0", "type": "iframe" },
-      { "name": "Server 2", "url": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=1", "type": "iframe" }
+      { "name": "Server 2", "url": "https://11.yallashoot1.cc/albaplayer/1bein1/", "type": "iframe" }
     ],
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_Czech_Republic.svg"
