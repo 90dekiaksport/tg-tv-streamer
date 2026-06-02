@@ -1,26 +1,194 @@
 [
   {
-    "id": "brazil-france",
-    "title": "Brazil vs France",
-    "description": "23:00 PM THURSDAY",
+    "id": "mexico-southafrica",
+    "title": "Mexico vs South Africa",
+    "description": "JUNE 11 | 22:00 PM THURSDAY",
     "src": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0",
-    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg",
-    "logoRight": "https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg"
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/a/af/Flag_of_South_Africa.svg"
   },
   {
-    "id": "argentina-germany",
-    "title": "Argentina vs Germany",
-    "description": "20:00 PM FRIDAY",
-    "src": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg",
-    "logoRight": "https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg"
+    "id": "southkorea-czechia",
+    "title": "South Korea vs Czech Republic",
+    "description": "JUNE 12 | 05:00 AM FRIDAY",
+    "src": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_the_Czech_Republic.svg"
   },
   {
-    "id": "italy-spain",
-    "title": "Italy vs Spain",
-    "description": "18:30 PM SATURDAY",
+    "id": "canada-BiH",
+    "title": "Canada vs Bosnia and Herzegovina",
+    "description": "JUNE 12 | 22:00 PM FRIDAY",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
-    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg",
-    "logoRight": "https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg"
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/c/cf/Flag_of_Canada.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Flag_of_Bosnia_and_Herzegovina.svg"
+  },    
+  {
+    "id": "usa-paraguay",
+    "title": "USA vs Paraguay",
+    "description": "JUNE 13 | 04:00 AM SATURDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/2/28/Flag_of_Paraguay.svg"
+  },
+  {
+    "id": "qatar-switzerland",
+    "title": "Qatar vs Switzerland",
+    "description": "JUNE 13 | 22:00 PM SATURDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/09/Flag_of_Qatar.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/0/08/Flag_of_Switzerland.svg"
+  },
+  {
+    "id": "brazil-morocco",
+    "title": "Brazil vs Morocco",
+    "description": "JUNE 14 | 01:00 AM SUNDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Morocco.svg"
+  },
+  {
+    "id": "haiti-scotland",
+    "title": "Haiti vs Scotland",
+    "description": "JUNE 14 | 04:00 AM SUNDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Flag_of_Haiti.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/1/15/Flag_of_Scotland.svg"
+  },
+  {
+    "id": "australia-turkiye",
+    "title": "Australia vs Turkey",
+    "description": "JUNE 14 | 07:00 AM SUNDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/8/83/Flag_of_Australia.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Flag_of_Turkey.svg"
+  },
+  {
+    "id": "germany-curacao",
+    "title": "Germany vs Curaçao",
+    "description": "JUNE 14 | 08:00 PM SUNDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Flag_of_Curaçao.svg"
+  },
+  {
+    "id": "netherlands-japan",
+    "title": "Netherlands vs Japan",
+    "description": "JUNE 14 | 11:00 PM SUNDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/2/20/Flag_of_the_Netherlands.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg"
+  },
+  {
+    "id": "ivorycoast-ecuador",
+    "title": "Ivory Coast vs Ecuador",
+    "description": "JUNE 15 | 02:00 AM MONDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/4/49/Flag_of_Ivory_Coast.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/4/46/Flag_of_Ecuador.svg"
+  },
+  {
+    "id": "sweden-tunisia",
+    "title": "Sweden vs Tunisia",
+    "description": "JUNE 15 | 05:00 AM MONDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/4/45/Flag_of_Sweden.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/6/66/Flag_of_Tunisia.svg"
+  },
+  {
+    "id": "spain-capeverde",
+    "title": "Spain vs Cape Verde",
+    "description": "JUNE 15 | 07:00 PM MONDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/9/9c/Flag_of_Spain.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/4/45/Flag_of_Cape_Verde.svg"
+  },
+  {
+    "id": "belgium-egypt",
+    "title": "Belgium vs Egypt",
+    "description": "JUNE 15 | 10:00 PM MONDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/9/92/Flag_of_Belgium.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Egypt.svg"
+  },
+  {
+    "id": "saudiarabia-uruguay",
+    "title": "Saudi Arabia vs Uruguay",
+    "description": "JUNE 16 | 01:00 AM TUESDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/0f/Flag_of_Saudi_Arabia.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/3/36/Flag_of_Uruguay.svg"
+  },
+  {
+    "id": "iran-newzealand",
+    "title": "Iran vs New Zealand",
+    "description": "JUNE 16 | 04:00 AM TUESDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/0c/Flag_of_Iran.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/en/3/3e/Flag_of_New_Zealand.svg"
+  },
+  {
+    "id": "france-senegal",
+    "title": "France vs Senegal",
+    "description": "JUNE 16 | 10:00 PM TUESDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/1/1a/Flag_of_France.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/9/92/Flag_of_Senegal.svg"
+  },
+  {
+    "id": "iraq-norway",
+    "title": "Iraq vs Norway",
+    "description": "JUNE 17 | 01:00 AM WEDNESDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/0c/Flag_of_Iraq.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/en/4/4c/Flag_of_Norway.svg"
+  },
+  {
+    "id": "argentina-algeria",
+    "title": "Argentina vs Algeria",
+    "description": "JUNE 17 | 04 :00 AM WEDNESDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/1/1a/Flag_of_Argentina.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/7/77/Flag_of_Algeria.svg"
+  },
+  {
+    "id": "austria-jordan",
+    "title": "Austria vs Jordan",
+    "description": "JUNE 17 | 07:00 AM WEDNESDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/0f/Flag_of_Austria.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Jordan.svg"
+  },
+  {
+    "id": "portugal-drcongo",
+    "title": "Portugal vs DR Congo",
+    "description": "JUNE 17 | 08:00 PM WEDNESDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/3/35/Flag_of_Portugal.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Flag_of_the_Democratic_Republic_of_the_Congo.svg"
+  },
+  {
+    "id": "england-croatia",
+    "title": "England vs Croatia",
+    "description": "JUNE 14 | 11:00 PM WEDNESDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Croatia.svg"
+  },
+  {
+    "id": "ghana-panama",
+    "title": "Ghana vs Panama",
+    "description": "JUNE 18 | 02:00 AM THURSDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/0f/Flag_of_Ghana.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/en/a/a9/Flag_of_Panama.svg"
+  },
+   {
+    "id": "uzbekistan-colombia",
+    "title": "Uzbekistan vs Colombia",
+    "description": "JUNE 18 | 05:00 AM THURSDAY",
+    "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
+    "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/0d/Flag_of_Uzbekistan.svg",
+    "logoRight": "https://upload.wikimedia.org/wikipedia/en/2/20/Flag_of_Colombia.svg"
   }
 ]
