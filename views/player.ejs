@@ -60,18 +60,18 @@
   </header>
 
   <main class="w-full max-w-md px-4">
-    <!-- 📺 Smart Player -->
-    <div id="player-wrapper" class="relative bg-black rounded-2xl border border-gray-800 overflow-hidden shadow-2xl mb-6 aspect-video">
+    <!-- 📺 Smart Player (Taller aspect ratio for more space) -->
+    <div id="player-wrapper" class="relative bg-black rounded-2xl border border-gray-800 overflow-hidden shadow-2xl mb-6 aspect-[14/9] flex flex-col">
       <div id="loader" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0b0c10]">
         <div class="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
         <span class="mt-4 text-[10px] font-bold uppercase tracking-widest text-blue-500/60">Buffering</span>
       </div>
 
-      <video id="video-player" class="w-full h-full object-contain hidden" controls playsinline></video>
-      <iframe id="iframe-player" class="w-full h-full hidden" allow="fullscreen; autoplay" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-fullscreen" frameborder="0"></iframe>
+      <video id="video-player" class="w-full flex-1 object-contain hidden" controls playsinline></video>
+      <iframe id="iframe-player" class="w-full flex-1 hidden" allow="fullscreen; autoplay" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-fullscreen" frameborder="0"></iframe>
 
-      <!-- 🚀 Full Screen Button (Nested inside wrapper to prevent iframe interception) -->
-      <button id="fullscreen-btn" onclick="toggleInAppFullScreen()" class="w-full mt-4 py-3 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm shadow-lg">
+      <!-- 🚀 View Full Screen Button -->
+      <button id="fullscreen-btn" onclick="toggleInAppFullScreen()" class="w-full py-3 bg-gray-800 text-white font-bold hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm shadow-lg border-t border-gray-700">
         <span id="btn-text">📺 VIEW FULL SCREEN</span>
       </button>
 
