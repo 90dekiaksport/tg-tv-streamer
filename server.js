@@ -31,21 +31,24 @@ app.get("/channel/:id", (req, res) => {
 
 // 💬 Chat API Endpoints
 app.get("/api/chat/:channelId", (req, res) => {
-  const channelMessages = chatMessages.filter(m => m.channelId === req.params.channelId);
+  const channelId = req.params.channelId;
+  const channelMessages = chatMessages.filter(m => m.channelId === channelId);
   res.json(channelMessages);
 });
 
 app.post("/api/chat/:channelId", (req, res) => {
   const { username, text } = req.body;
+  if (!text) return res.status(400).send("Missing text");
+
   const newMessage = {
     channelId: req.params.channelId,
     username: username || "Guest",
     text,
     timestamp: Date.now()
   };
+
   chatMessages.push(newMessage);
-  // Optional: Limit array size to prevent memory bloat
-  if (chatMessages.length > 500) chatMessages.shift();
+  if (chatMessages.length > 200) chatMessages.shift(); // Keep memory lean on Render free tier
   res.status(201).json(newMessage);
 });
 
