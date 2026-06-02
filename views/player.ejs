@@ -13,7 +13,12 @@
     .glass-card { background: rgba(22, 24, 32, 0.8); backdrop-filter: blur(10px); }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     #chat-box { height: 280px; overflow-y: auto; scroll-behavior: smooth; }
+    #chat-history { height: 260px; overflow-y: auto; scroll-behavior: smooth; }
     .animate-fade-in { animation: fadeIn 0.5s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center pb-10">
@@ -51,15 +56,20 @@
       <p class="text-xs text-gray-500 font-medium"><%= channel.description %></p> <%# This is where the schedule goes %>
     </div>
 
-    <!-- 💬 Live Chat Feed Placeholder -->
+    <!-- 💬 Interactive Live Chat Component -->
     <section class="mt-8 glass-card rounded-2xl border border-white/5 overflow-hidden">
       <div class="px-4 py-3 border-b border-white/5 flex justify-between items-center">
         <span class="text-[10px] font-black tracking-widest text-gray-500 uppercase">Live Chat</span>
         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
       </div>
       
-      <div id="chat-placeholder" class="p-4 flex flex-col gap-3 h-[300px] overflow-y-auto no-scrollbar justify-end">
-        <p class="text-center text-gray-600 text-xs font-medium">Third-party live chat widget will load here.</p>
+      <div id="chat-history" class="p-4 flex flex-col no-scrollbar">
+        <!-- Bubble messages appear here -->
+      </div>
+
+      <div class="p-3 bg-black/40 border-t border-white/5 flex gap-2 sticky bottom-0">
+        <input id="chat-input" type="text" placeholder="Say something..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500/50 transition-all">
+        <button onclick="sendMsg()" class="bg-blue-600 px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-transform">Send</button>
       </div>
     </section>
 
@@ -80,6 +90,48 @@
     const iframe = document.getElementById('iframe-player');
     const loader = document.getElementById('loader');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const chatHistory = document.getElementById('chat-history');
+    const chatInput = document.getElementById('chat-input');
+
+    /**
+     * 💬 Live Chat Logic (Optimized Local Simulation)
+     */
+    const botNames = ["Yonas", "Selam", "Desta", "Hagos", "Abebe", "Kebede", "Mulu"];
+    const botMsgs = [
+      "እንኳን ደህና መጣችሁ! 🇪🇹", "Great quality today!", "Who's winning?", 
+      "Go Ethiopia!! 🦁", "Love this app interface", "Signal is very stable", "በጣም ደስ ይላል"
+    ];
+
+    function appendMessage(name, text, isUser = false) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `flex flex-col ${isUser ? 'items-end' : 'items-start'} animate-fade-in mb-3`;
+      const bubbleClass = isUser ? 'bg-blue-600 text-white rounded-l-xl rounded-tr-xl' : 'bg-white/10 text-gray-200 rounded-r-xl rounded-tl-xl';
+      
+      msgDiv.innerHTML = `
+        <span class="text-[9px] font-bold ${isUser ? 'text-blue-400' : 'text-gray-500'} mb-1 px-1">${name}</span>
+        <div class="px-3 py-2 text-xs ${bubbleClass} max-w-[85%] break-words shadow-sm">
+          ${text}
+        </div>
+      `;
+      chatHistory.appendChild(msgDiv);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function sendMsg() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      appendMessage("You", text, true);
+      chatInput.value = "";
+    }
+
+    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMsg(); });
+
+    // Simulated crowd activity interval
+    setInterval(() => {
+      const name = botNames[Math.floor(Math.random() * botNames.length)];
+      const msg = botMsgs[Math.floor(Math.random() * botMsgs.length)];
+      appendMessage(name, msg);
+    }, 4500);
     
     let hls = null;
     const channelSrc = "<%= channel.src %>";
