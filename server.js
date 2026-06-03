@@ -36,6 +36,11 @@ app.get("/", (req, res) => {
   res.render("index", { channels: streams, promoConfig });
 });
 
+// 📜 DMCA Policy Route
+app.get("/dmca", (req, res) => {
+  res.render("dmca");
+});
+
 // 📺 Dedicated Channel Detail Route
 app.get("/channel/:id", (req, res) => {
   const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8"));
