@@ -24,7 +24,12 @@ const promoConfig = {
 
 // Global in-memory chat storage
 let chatMessages = [];
+// 🔄 Global Subscriber Array Setup
 let liveSubscribers = [];
+
+// Initialize global channels for the background scheduler
+const streamsPath = path.join(process.cwd(), "player", "streams.json");
+global.channels = JSON.parse(fs.readFileSync(streamsPath, "utf8"));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views"));
@@ -33,9 +38,73 @@ app.use(express.json());
 app.use("/player", express.static(path.join(process.cwd(), "player")));
 app.use(express.static(path.join(process.cwd(), "public")));
 
+// ⏰ 15-Minute Advance 'setInterval' Loop
+setInterval(() => {
+    const now = new Date();
+    if (!global.channels || !Array.isArray(global.channels)) return;
+
+    global.channels.forEach(match => {
+        // Skip if already notified or if no kickoff time is defined
+        if (match.notificationSent || !match.kickoffISO) return;
+
+        try {
+            const kickoffDate = new Date(match.kickoffISO);
+            if (isNaN(kickoffDate.getTime())) return;
+
+            // Calculate the exact window: Kickoff Time minus 15 minutes
+            const notificationWindow = new Date(kickoffDate.getTime() - (15 * 60 * 1000));
+
+            // If the current time hits or passes that 15-minute advance warning mark
+            if (now >= notificationWindow) {
+                sendLiveNotification(match.id, match.title);
+                match.notificationSent = true; // Mark true so it never repeats
+                console.log(`[Notification System] 15-minute advance alert fired for: ${match.title}`);
+            }
+        } catch (error) {
+            console.error(`[Scheduler Error] Failed processing match ID ${match.id}:`, error);
+        }
+    });
+}, 60000);
+
+// 🚀 Core Notification Bot Dispatcher Function
+async function sendLiveNotification(channelId, matchName) {
+    const botToken = process.env.TG_TOKEN;
+    // Replace 'YOUR_BOT_USERNAME' with your actual bot username
+    const botUsername = "90_dekika_bot"; 
+    
+    const matchSubscribers = liveSubscribers.filter(sub => sub.channelId === channelId);
+    
+    for (const sub of matchSubscribers) {
+        const text = `⚽ *Incoming Match Alert!*\n\n"${matchName}" starts in *15 minutes*! Get ready to watch the action live.`;
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+        try {
+            await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: sub.userId,
+                    text: text,
+                    parse_mode: "Markdown",
+                    reply_markup: {
+                        inline_keyboard: [[
+                            { text: "📺 Open Match Now", url: `https://t.me/${botUsername}/app?startapp=${channelId}` }
+                        ]]
+                    }
+                })
+            });
+        } catch (err) {
+            console.error(`[Dispatcher Error] Failed to notify user ${sub.userId}:`, err.message);
+        }
+    }
+
+    // Flush subscribers for this match after dispatch
+    liveSubscribers = liveSubscribers.filter(sub => sub.channelId !== channelId);
+}
+
 // 🗂️ Dashboard Route
 app.get("/", (req, res) => {
-  const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8")).map(ch => {
+  const streams = global.channels.map(ch => {
     // Backward compatibility: Convert single src to servers array if necessary
     if (!ch.servers || ch.servers.length === 0) {
       ch.servers = [{ name: "Server 1", url: ch.src, type: ch.src.includes(".m3u8") ? "m3u8" : "iframe" }];
@@ -52,8 +121,7 @@ app.get("/dmca", (req, res) => {
 
 // 📺 Dedicated Channel Detail Route
 app.get("/channel/:id", (req, res) => {
-  const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8"));
-  let channel = streams.find(c => c.id === req.params.id);
+  let channel = global.channels.find(c => c.id === req.params.id);
   if (!channel) return res.redirect("/");
   
   if (!channel.servers || channel.servers.length === 0) {
@@ -62,7 +130,7 @@ app.get("/channel/:id", (req, res) => {
   res.render("player", { channel, promoConfig });
 });
 
-// 🔔 Notification Subscription Endpoint
+//  Frontend Subscription Endpoint
 app.post("/api/notifications/subscribe", (req, res) => {
   const { userId, channelId } = req.body;
   if (!userId || !channelId) return res.status(400).send("Missing userId or channelId");
@@ -82,8 +150,7 @@ app.get("/api/admin/trigger-live/:channelId", (req, res) => {
   const { channelId } = req.params;
   const subscribers = liveSubscribers.filter(sub => sub.channelId === channelId);
   
-  const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8"));
-  const match = streams.find(c => c.id === channelId);
+  const match = global.channels.find(c => c.id === channelId);
   const title = match ? match.title : "Your Match";
 
   subscribers.forEach(sub => {
