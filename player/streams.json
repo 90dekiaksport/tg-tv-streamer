@@ -2,8 +2,8 @@
   {
     "id": "mexico-southafrica",
     "title": "Mexico vs South Africa",
-    "description": "JUNE 03 | 16:00 PM THURSDAY",
-    "kickoffISO": "2026-06-03T16:00:00Z",
+    "description": "JUNE 03 | 16:15 PM THURSDAY",
+    "kickoffISO": "2026-06-03T16:15:00+03:00",
     "servers": [
       { "name": "Server 1", "url": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0", "type": "iframe" },
       { "name": "Server 4", "url": "https://11.yallashoot1.cc/albaplayer/1bein1/", "type": "iframe" }
@@ -15,7 +15,7 @@
     "id": "southkorea-czechia",
     "title": "South Korea vs Czech Republic",
     "description": "JUNE 12 | 05:00 AM FRIDAY",
-    "kickoffISO": "2026-06-12T05:00:00Z",
+    "kickoffISO": "2026-06-12T05:00:00+03:00",
     "servers": [
       { "name": "Server 1", "url": "https://1.wwwkoooora.com/albaplayer/bein-sports-hd-1/?serv=0", "type": "iframe" },
       { "name": "Server 2", "url": "https://11.yallashoot1.cc/albaplayer/1bein1/", "type": "iframe" }
@@ -27,7 +27,7 @@
     "id": "canada-BiH",
     "title": "Canada vs Bosnia and Herzegovina",
     "description": "JUNE 12 | 10:00 PM FRIDAY",
-    "kickoffISO": "2026-06-12T22:00:00Z",
+    "kickoffISO": "2026-06-12T22:00:00+03:00",
     "servers": [
       { "name": "Main Stream", "url": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8", "type": "m3u8" },
       { "name": "Backup", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "type": "m3u8" }
@@ -39,7 +39,7 @@
     "id": "usa-paraguay",
     "title": "USA vs Paraguay",
     "description": "JUNE 13 | 04:00 AM SATURDAY",
-    "kickoffISO": "2026-06-13T04:00:00Z",
+    "kickoffISO": "2026-06-13T04:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/2/27/Flag_of_Paraguay.svg"
@@ -48,7 +48,7 @@
     "id": "qatar-switzerland",
     "title": "Qatar vs Switzerland",
     "description": "JUNE 13 | 22:00 PM SATURDAY",
-    "kickoffISO": "2026-06-13T22:00:00Z",
+    "kickoffISO": "2026-06-13T22:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/6/65/Flag_of_Qatar.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Switzerland.svg"
@@ -57,7 +57,7 @@
     "id": "brazil-morocco",
     "title": "Brazil vs Morocco",
     "description": "JUNE 14 | 01:00 AM SUNDAY",
-    "kickoffISO": "2026-06-14T01:00:00Z",
+    "kickoffISO": "2026-06-14T01:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Morocco.svg"
@@ -66,7 +66,7 @@
     "id": "haiti-scotland",
     "title": "Haiti vs Scotland",
     "description": "JUNE 14 | 04:00 AM SUNDAY",
-    "kickoffISO": "2026-06-14T04:00:00Z",
+    "kickoffISO": "2026-06-14T04:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/5/56/Flag_of_Haiti.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/1/10/Flag_of_Scotland.svg"
@@ -75,7 +75,7 @@
     "id": "australia-turkiye",
     "title": "Australia vs Turkey",
     "description": "JUNE 14 | 07:00 AM SUNDAY",
-    "kickoffISO": "2026-06-14T07:00:00Z",
+    "kickoffISO": "2026-06-14T07:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/8/88/Flag_of_Australia_%28converted%29.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Flag_of_Turkey.svg"
@@ -84,7 +84,7 @@
     "id": "germany-curacao",
     "title": "Germany vs Curaçao",
     "description": "JUNE 14 | 08:00 PM SUNDAY",
-    "kickoffISO": "2026-06-14T20:00:00Z",
+    "kickoffISO": "2026-06-14T20:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Flag_of_Cura%C3%A7ao.svg"
@@ -93,7 +93,7 @@
     "id": "netherlands-japan",
     "title": "Netherlands vs Japan",
     "description": "JUNE 14 | 11:00 PM SUNDAY",
-    "kickoffISO": "2026-06-14T23:00:00Z",
+    "kickoffISO": "2026-06-14T23:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/2/20/Flag_of_the_Netherlands.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg"
@@ -102,7 +102,7 @@
     "id": "ivorycoast-ecuador",
     "title": "Ivory Coast vs Ecuador",
     "description": "JUNE 15 | 02:00 AM MONDAY",
-    "kickoffISO": "2026-06-15T02:00:00Z",
+    "kickoffISO": "2026-06-15T02:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_C%C3%B4te_d%27Ivoire.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Flag_of_Ecuador.svg"
@@ -111,7 +111,7 @@
     "id": "sweden-tunisia",
     "title": "Sweden vs Tunisia",
     "description": "JUNE 15 | 05:00 AM MONDAY",
-    "kickoffISO": "2026-06-15T05:00:00Z",
+    "kickoffISO": "2026-06-15T05:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Tunisia.svg"
@@ -120,7 +120,7 @@
     "id": "spain-capeverde",
     "title": "Spain vs Cape Verde",
     "description": "JUNE 15 | 07:00 PM MONDAY",
-    "kickoffISO": "2026-06-15T19:00:00Z",
+    "kickoffISO": "2026-06-15T19:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Spain.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/3/38/Flag_of_Cape_Verde.svg"
@@ -129,7 +129,7 @@
     "id": "belgium-egypt",
     "title": "Belgium vs Egypt",
     "description": "JUNE 15 | 10:00 PM MONDAY",
-    "kickoffISO": "2026-06-15T22:00:00Z",
+    "kickoffISO": "2026-06-15T22:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/6/65/Flag_of_Belgium.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Egypt_%28variant%29.svg"
@@ -138,7 +138,7 @@
     "id": "saudiarabia-uruguay",
     "title": "Saudi Arabia vs Uruguay",
     "description": "JUNE 16 | 01:00 AM TUESDAY",
-    "kickoffISO": "2026-06-16T01:00:00Z",
+    "kickoffISO": "2026-06-16T01:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg"
@@ -147,7 +147,7 @@
     "id": "iran-newzealand",
     "title": "Iran vs New Zealand",
     "description": "JUNE 16 | 04:00 AM TUESDAY",
-    "kickoffISO": "2026-06-16T04:00:00Z",
+    "kickoffISO": "2026-06-16T04:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Flag_of_Iran.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Flag_of_New_Zealand.svg"
@@ -156,7 +156,7 @@
     "id": "france-senegal",
     "title": "France vs Senegal",
     "description": "JUNE 16 | 10:00 PM TUESDAY",
-    "kickoffISO": "2026-06-16T22:00:00Z",
+    "kickoffISO": "2026-06-16T22:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Flag_of_Senegal.svg"
@@ -165,7 +165,7 @@
     "id": "iraq-norway",
     "title": "Iraq vs Norway",
     "description": "JUNE 17 | 01:00 AM WEDNESDAY",
-    "kickoffISO": "2026-06-17T01:00:00Z",
+    "kickoffISO": "2026-06-17T01:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Flag_of_Iraq.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Norway.svg"
@@ -174,7 +174,7 @@
     "id": "argentina-algeria",
     "title": "Argentina vs Algeria",
     "description": "JUNE 17 | 04 :00 AM WEDNESDAY",
-    "kickoffISO": "2026-06-17T04:00:00Z",
+    "kickoffISO": "2026-06-17T04:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/7/77/Flag_of_Algeria.svg"
@@ -183,7 +183,7 @@
     "id": "austria-jordan",
     "title": "Austria vs Jordan",
     "description": "JUNE 17 | 07:00 AM WEDNESDAY",
-    "kickoffISO": "2026-06-17T07:00:00Z",
+    "kickoffISO": "2026-06-17T07:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/4/41/Flag_of_Austria.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Flag_of_Jordan.svg"
@@ -192,7 +192,7 @@
     "id": "portugal-drcongo",
     "title": "Portugal vs DR Congo",
     "description": "JUNE 17 | 08:00 PM WEDNESDAY",
-    "kickoffISO": "2026-06-17T20:00:00Z",
+    "kickoffISO": "2026-06-17T20:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Flag_of_the_Democratic_Republic_of_the_Congo.svg"
@@ -201,7 +201,7 @@
     "id": "england-croatia",
     "title": "England vs Croatia",
     "description": "JUNE 14 | 11:00 PM WEDNESDAY",
-    "kickoffISO": "2026-06-14T23:00:00Z",
+    "kickoffISO": "2026-06-14T23:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Croatia.svg"
@@ -210,7 +210,7 @@
     "id": "ghana-panama",
     "title": "Ghana vs Panama",
     "description": "JUNE 18 | 02:00 AM THURSDAY",
-    "kickoffISO": "2026-06-18T02:00:00Z",
+    "kickoffISO": "2026-06-18T02:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/1/19/Flag_of_Ghana.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Flag_of_Panama.svg"
@@ -219,7 +219,7 @@
     "id": "uzbekistan-colombia",
     "title": "Uzbekistan vs Colombia",
     "description": "JUNE 18 | 05:00 AM THURSDAY",
-    "kickoffISO": "2026-06-18T05:00:00Z",
+    "kickoffISO": "2026-06-18T05:00:00+03:00",
     "src": "https://wowzaec2demo.streamlock.net/live/bigbuckbunny/playlist.m3u8",
     "logoLeft": "https://upload.wikimedia.org/wikipedia/commons/8/84/Flag_of_Uzbekistan.svg",
     "logoRight": "https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg"
