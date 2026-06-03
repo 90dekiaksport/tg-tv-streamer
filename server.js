@@ -50,7 +50,7 @@ app.get("/channel/:id", (req, res) => {
   if (!channel.servers || channel.servers.length === 0) {
     channel.servers = [{ name: "Server 1", url: channel.src, type: channel.src.includes(".m3u8") ? "m3u8" : "iframe" }];
   }
-  res.render("player", { channel });
+  res.render("player", { channel, promoConfig });
 });
 
 // 💬 Chat API Endpoints
