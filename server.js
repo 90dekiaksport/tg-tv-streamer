@@ -9,8 +9,8 @@ const port = process.env.PORT || 3000;
 // 🎛️ Admin Promotion Controls
 const promoConfig = {
   showPromo: true, // Set to false to turn the banner completely off
-  text: "🔥 Premium Ad: Join VIP Streaming Channel Now!",
-  link: "https://t.me/your_promo_link",
+  text: "🔥Join VIP Streaming Channel Now!",
+  link: "https://t.me/zetena_dekika_sport",
   imageUrl: "https://placehold.co/600x200/0b0c10/3b82f6?text=VIP+Promotion" // Optimized for the obsidian theme
 };
 
