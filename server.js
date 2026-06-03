@@ -8,10 +8,17 @@ const port = process.env.PORT || 3000;
 
 // 🎛️ Admin Promotion Controls
 const promoConfig = {
-  showPromo: true, // Set to false to turn the banner completely off
-  text: "🔥Join VIP Streaming Channel Now!",
-  link: "https://t.me/zetena_dekika_sport",
-  imageUrl: "https://placehold.co/600x200/0b0c10/3b82f6?text=VIP+Promotion" // Optimized for the obsidian theme
+  showHomePromos: true, // Master toggle for home page promotions
+  homePromos: [
+    { text: "🔥 join VIP Betting Channel!", link: "https://t.me/vip_link1", imageUrl: "https://placehold.co/400x100/0b0c10/3b82f6?text=VIP+Betting" },
+    { text: "⚽ Stream Live Matches in HD Here!", link: "https://t.me/vip_link2", imageUrl: "https://placehold.co/400x100/0b0c10/f59e0b?text=HD+Streaming" }
+  ],
+  showStationPromo: true, // Toggle for the banner inside channel pages
+  stationPromo: { 
+    text: "💥 Sponsor: Click here to claim your bonus!", 
+    link: "https://t.me/sponsor_link", 
+    imageUrl: "https://placehold.co/400x100/0b0c10/10b981?text=Bonus+Offer" 
+  }
 };
 
 // Global in-memory chat storage
