@@ -6,6 +6,14 @@ import fs from "fs";
 const app = express();
 const port = process.env.PORT || 3000;
 
+// 🎛️ Admin Promotion Controls
+const promoConfig = {
+  showPromo: true, // Set to false to turn the banner completely off
+  text: "🔥 Premium Ad: Join VIP Streaming Channel Now!",
+  link: "https://t.me/your_promo_link",
+  imageUrl: "https://placehold.co/600x200/0b0c10/3b82f6?text=VIP+Promotion" // Optimized for the obsidian theme
+};
+
 // Global in-memory chat storage
 let chatMessages = [];
 
@@ -25,7 +33,7 @@ app.get("/", (req, res) => {
     }
     return ch;
   });
-  res.render("index", { channels: streams });
+  res.render("index", { channels: streams, promoConfig });
 });
 
 // 📺 Dedicated Channel Detail Route

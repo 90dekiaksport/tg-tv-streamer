@@ -75,7 +75,7 @@
         <span class="text-[10px] text-blue-500/50 font-bold"><%= channels.length %> Stations</span>
       </div>
       <div id="channel-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-        <% channels.forEach(ch => { %>
+        <% channels.forEach((ch, index) => { %>
           <a href="/channel/<%= ch.id %>" class="glass-card group p-5 rounded-2xl border border-white/5 transition-all duration-300 hover:border-blue-500/50 hover:bg-white/[0.03] hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] active:scale-[0.97] flex flex-col items-center">
             <!-- 🎏 Multi-Country Team & Flag Component -->
             <div class="flex items-center justify-around w-full mb-5 px-1">
@@ -98,6 +98,25 @@
               </div>
             </div>
           </a>
+
+          <% /* Mid-Grid Responsive Banner: Injected after the first row (index 1 for mobile) */ %>
+          <% if (promoConfig.showPromo && index === 1) { %>
+            <a href="<%= promoConfig.link %>" target="_blank" class="col-span-full glass-card p-1 rounded-2xl border border-blue-500/30 overflow-hidden relative group transition-all duration-500 hover:shadow-[0_0_40px_rgba(59,130,246,0.2)] active:scale-[0.98]">
+              <div class="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent pointer-events-none"></div>
+              <div class="flex items-center gap-4 p-4 relative z-10">
+                <div class="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-xl overflow-hidden border border-white/10 shadow-2xl transform transition-transform group-hover:scale-105">
+                  <img src="<%= promoConfig.imageUrl %>" class="w-full h-full object-cover" alt="Promo">
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em] px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20">Sponsored</span>
+                  </div>
+                  <p class="text-sm md:text-base font-black tracking-tight text-white group-hover:text-blue-400 transition-colors line-clamp-2"><%= promoConfig.text %></p>
+                </div>
+                <div class="hidden sm:flex px-5 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all">Join</div>
+              </div>
+            </a>
+          <% } %>
         <% }) %>
       </div>
     </section>
