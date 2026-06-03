@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src='//libtl.com/sdk.js' data-zone='11094774' data-sdk='show_11094774'></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>90 ደቂቃ Live</title>
@@ -131,6 +132,20 @@
     const telegram = window.Telegram.WebApp;
     telegram.ready();
     telegram.expand();
+
+    // 💰 Monetag In-App Interstitial Initialization
+    if (typeof show_11094774 === 'function') {
+      show_11094774({
+        type: 'inApp',
+        inAppSettings: {
+          frequency: 2,
+          capping: 0.1,
+          interval: 30,
+          timeout: 5,
+          everyPage: false // Ensures session persists cleanly across channel transitions
+        }
+      });
+    }
 
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
