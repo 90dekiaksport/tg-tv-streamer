@@ -10,14 +10,14 @@ const port = process.env.PORT || 3000;
 const promoConfig = {
   showHomePromos: true, // Master toggle for home page promotions
   homePromos: [
-    { text: "🔥 join VIP Betting Channel!", link: "https://t.me/vip_link1", imageUrl: "https://placehold.co/400x100/0b0c10/3b82f6?text=VIP+Betting" },
-    { text: "⚽ Stream Live Matches in HD Here!", link: "https://t.me/vip_link2", imageUrl: "https://placehold.co/400x100/0b0c10/f59e0b?text=HD+Streaming" }
+    { text: "🔥 join VIP Betting Channel!", link: "https://t.me/zetena_dekika_sport", imageUrl: "https://cdn.jsdelivr.net/gh/90dekiaksport/radioimg@main/90dekika.png?raw=true" },
+    { text: "⚽ Stream Live Matches in HD Here!", link: "https://t.me/bisrat_sport_433et", imageUrl: "https://cdn.jsdelivr.net/gh/90dekiaksport/radioimg@main/433sport.png?raw=true" }
   ],
   showStationPromo: true, // Toggle for the banner inside channel pages
   stationPromo: { 
-    text: "💥 Sponsor: Click here to claim your bonus!", 
+    text: "💥 JOIN OUR CHANNEL", 
     link: "https://t.me/sponsor_link", 
-    imageUrl: "https://placehold.co/400x100/0b0c10/10b981?text=Bonus+Offer" 
+    imageUrl: "https://cdn.jsdelivr.net/gh/90dekiaksport/radioimg@main/90dekika.png?raw=true" 
   }
 };
 
