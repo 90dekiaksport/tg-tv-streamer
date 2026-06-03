@@ -2,6 +2,7 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
+import { bot } from './bot.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ const promoConfig = {
 
 // Global in-memory chat storage
 let chatMessages = [];
+let liveSubscribers = [];
 
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views"));
@@ -60,6 +62,44 @@ app.get("/channel/:id", (req, res) => {
   res.render("player", { channel, promoConfig });
 });
 
+// 🔔 Notification Subscription Endpoint
+app.post("/api/notifications/subscribe", (req, res) => {
+  const { userId, channelId } = req.body;
+  if (!userId || !channelId) return res.status(400).send("Missing userId or channelId");
+
+  // Store preference (preventing duplicates)
+  const exists = liveSubscribers.some(s => s.userId === userId && s.channelId === channelId);
+  if (!exists) {
+    liveSubscribers.push({ userId, channelId });
+  }
+  
+  res.json({ success: true, message: "Subscribed successfully" });
+});
+
+// 🛠️ Mockup Admin Trigger (Call this to notify users when a specific match goes live)
+// Usage: GET /api/admin/trigger-live/mexico-southafrica
+app.get("/api/admin/trigger-live/:channelId", (req, res) => {
+  const { channelId } = req.params;
+  const subscribers = liveSubscribers.filter(sub => sub.channelId === channelId);
+  
+  const streams = JSON.parse(fs.readFileSync(path.join(process.cwd(), "player", "streams.json"), "utf8"));
+  const match = streams.find(c => c.id === channelId);
+  const title = match ? match.title : "Your Match";
+
+  subscribers.forEach(sub => {
+    bot.sendMessage(sub.userId, `🔔 LIVE NOW: ${title.toUpperCase()}\n\nClick the button below to start watching immediately!`, {
+      reply_markup: {
+        inline_keyboard: [[{ text: "📺 Watch Live", web_app: { url: "https://tg-tv-streamer.onrender.com/" } }]]
+      }
+    }).catch(err => console.error(`Bot failed to notify ${sub.userId}:`, err.message));
+  });
+
+  // Clear subscribers for this match after notification is sent
+  liveSubscribers = liveSubscribers.filter(sub => sub.channelId !== channelId);
+  
+  res.send(`Notifications sent to ${subscribers.length} users for ${title}`);
+});
+
 // 💬 Chat API Endpoints
 app.get("/api/chat/:channelId", (req, res) => {
   const channelId = req.params.channelId;
@@ -86,11 +126,4 @@ app.post("/api/chat/:channelId", (req, res) => {
 
 app.listen(port, () => {
   console.log(`Web app running at http://localhost:${port}`);
-});
-
-// Paste this at the absolute bottom of server.js to load your bot safely!
-import('./bot.js').then(() => {
-  console.log("🚀 Success! Bot script imported and listening directly inside the server pipeline.");
-}).catch((err) => {
-  console.error("❌ Failed to initialize bot bundle directly:", err);
 });

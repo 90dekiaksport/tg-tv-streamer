@@ -46,3 +46,6 @@ bot.on("message", (msg) => {
 
 // Confirmation message so you see it in VS Code terminal
 console.log("🚀 Success! Your Telegram bot is online and listening for commands...");
+
+// Export the bot instance for use in server.js routes
+export { bot };
